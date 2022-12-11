@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // ----------------------------------------------------------------------
 
-const axiosInstance = axios.create({ baseURL: 'http://localhost:3300/api' });
+const axiosInstance = axios.create({ baseURL: process.env.REACT_APP_API_KEY });
 
 axiosInstance.interceptors.request.use((req) => {
   if (localStorage.getItem('accessToken')) {
