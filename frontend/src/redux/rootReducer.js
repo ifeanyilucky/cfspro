@@ -28,12 +28,8 @@ const productPersistConfig = {
 };
 
 const rootReducer = combineReducers({
-  mail: mailReducer,
-  chat: chatReducer,
-  blog: blogReducer,
   user: userReducer,
-  calendar: calendarReducer,
-  kanban: kanbanReducer,
+
   investment: investmentReducer,
   product: persistReducer(productPersistConfig, productReducer)
 });
