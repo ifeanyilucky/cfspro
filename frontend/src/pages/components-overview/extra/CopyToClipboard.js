@@ -16,7 +16,7 @@ const RootStyle = styled(Page)(({ theme }) => ({
 
 export default function CopyToClipboard() {
   return (
-    <RootStyle title="Components: Copy To Clipboard | Minimal-UI">
+    <RootStyle title="Components: Copy To Clipboard">
       <Container maxWidth="lg">
         <Card>
           <CardContent>

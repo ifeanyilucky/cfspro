@@ -104,7 +104,7 @@ export default function FoundationColors() {
   };
 
   return (
-    <RootStyle title="Foundations: Color | Minimal-UI">
+    <RootStyle title="Foundations: Color">
       <Container maxWidth="lg">
         {COLORS.map((color) => (
           <Box key={color} sx={{ mb: 5 }}>

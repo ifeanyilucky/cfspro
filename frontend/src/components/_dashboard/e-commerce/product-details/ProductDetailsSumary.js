@@ -67,7 +67,6 @@ const RootStyle = styled('div')(({ theme }) => ({
 
 const Incrementer = (props) => {
   const [field, , helpers] = useField(props);
-  // eslint-disable-next-line react/prop-types
   const { available } = props;
   const { value } = field;
   const { setValue } = helpers;

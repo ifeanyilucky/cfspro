@@ -60,10 +60,10 @@ NavItem.propTypes = {
 function NavItem({ item, isShow }) {
   const theme = useTheme();
   const { pathname } = useLocation();
-  const { title, path, icon, info, children } = item;
-  const isActiveRoot = path ? !!matchPath({ path, end: false }, pathname) : false;
+  const { customer } = item;
+  // const isActiveRoot = path ? !!matchPath({ customer.pat, end: false }, pathname) : false;
 
-  const [open, setOpen] = useState(isActiveRoot);
+  const [open, setOpen] = useState(false);
 
   const handleOpen = () => {
     setOpen(!open);
@@ -81,10 +81,10 @@ function NavItem({ item, isShow }) {
     fontWeight: 'fontWeightMedium'
   };
 
-  if (children) {
+  if (customer) {
     return (
       <>
-        <ListItemStyle
+        {/* <ListItemStyle
           onClick={handleOpen}
           sx={{
             ...(isActiveRoot && activeRootStyle)
@@ -94,8 +94,8 @@ function NavItem({ item, isShow }) {
 
           {isShow && (
             <>
-              <ListItemText disableTypography primary={title} />
-              {info && info}
+              <ListItemText disableTypography primary={'title'} />
+             
               <Box
                 component={Icon}
                 icon={open ? arrowIosDownwardFill : arrowIosForwardFill}
@@ -103,85 +103,119 @@ function NavItem({ item, isShow }) {
               />
             </>
           )}
-        </ListItemStyle>
+        </ListItemStyle> */}
 
-        {isShow && (
-          <Collapse in={open} timeout="auto" unmountOnExit>
-            <List component="div" disablePadding>
-              {children.map((item) => {
-                const { title, path } = item;
-                const isActiveSub = path ? !!matchPath({ path, end: false }, pathname) : false;
+        <List component="div" disablePadding>
+          {customer.map((item) => {
+            const { title, path } = item;
+            const isActiveSub = path ? !!matchPath({ path, end: false }, pathname) : false;
 
-                return (
-                  <ListItemStyle
-                    key={title}
-                    component={RouterLink}
-                    to={path}
+            return (
+              <ListItemStyle
+                key={title}
+                component={RouterLink}
+                to={path}
+                sx={{
+                  ...(isActiveSub && activeSubStyle)
+                }}
+              >
+                <ListItemIconStyle>
+                  <Box
+                    component="span"
                     sx={{
-                      ...(isActiveSub && activeSubStyle)
+                      width: 4,
+                      height: 4,
+                      display: 'flex',
+                      borderRadius: '50%',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      bgcolor: 'text.disabled',
+                      transition: (theme) => theme.transitions.create('transform'),
+                      ...(isActiveSub && {
+                        transform: 'scale(2)',
+                        bgcolor: 'primary.main'
+                      })
                     }}
-                  >
-                    <ListItemIconStyle>
-                      <Box
-                        component="span"
-                        sx={{
-                          width: 4,
-                          height: 4,
-                          display: 'flex',
-                          borderRadius: '50%',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          bgcolor: 'text.disabled',
-                          transition: (theme) => theme.transitions.create('transform'),
-                          ...(isActiveSub && {
-                            transform: 'scale(2)',
-                            bgcolor: 'primary.main'
-                          })
-                        }}
-                      />
-                    </ListItemIconStyle>
-                    <ListItemText disableTypography primary={title} />
-                  </ListItemStyle>
-                );
-              })}
-            </List>
-          </Collapse>
-        )}
+                  />
+                </ListItemIconStyle>
+                <ListItemText disableTypography primary={title} />
+              </ListItemStyle>
+            );
+          })}
+        </List>
       </>
     );
   }
 
-  return (
-    <ListItemStyle
-      component={RouterLink}
-      to={path}
-      sx={{
-        ...(isActiveRoot && activeRootStyle)
-      }}
-    >
-      <ListItemIconStyle>{icon && icon}</ListItemIconStyle>
-      {isShow && (
-        <>
-          <ListItemText disableTypography primary={title} />
-          {info && info}
-        </>
-      )}
-    </ListItemStyle>
-  );
+  // return (
+  //   <ListItemStyle
+  //     component={RouterLink}
+  //     to={path}
+  //     sx={{
+  //       ...(isActiveRoot && activeRootStyle)
+  //     }}
+  //   >
+  //     <ListItemIconStyle>{icon && icon}</ListItemIconStyle>
+  //     {isShow && (
+  //       <>
+  //         <ListItemText disableTypography primary={title} />
+  //       </>
+  //     )}
+  //   </ListItemStyle>
+  // );
 }
 
 NavSection.propTypes = {
   isShow: PropTypes.bool,
-  navConfig: PropTypes.array
+  navConfig: PropTypes.object
 };
 
 export default function NavSection({ navConfig, isShow = true, ...other }) {
+  const activeSubStyle = {
+    color: 'text.primary',
+    fontWeight: 'fontWeightMedium'
+  };
+
+  const { pathname } = useLocation();
   return (
     <Box {...other}>
       <List disablePadding>
-        {navConfig.customer.map((item) => (
-          <NavItem key={item.title} item={item} isShow={isShow} />
-        ))}
+        {navConfig.customer.map((item) => {
+          const { title, path } = item;
+          const isActiveSub = path ? !!matchPath({ path, end: false }, pathname) : false;
+
+          return (
+            <ListItemStyle
+              key={title}
+              component={RouterLink}
+              to={path}
+              sx={{
+                ...(isActiveSub && activeSubStyle)
+              }}
+            >
+              <ListItemIconStyle>
+                <Box
+                  component="span"
+                  sx={{
+                    width: 4,
+                    height: 4,
+                    display: 'flex',
+                    borderRadius: '50%',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    bgcolor: 'text.disabled',
+                    transition: (theme) => theme.transitions.create('transform'),
+                    ...(isActiveSub && {
+                      transform: 'scale(2)',
+                      bgcolor: 'primary.main'
+                    })
+                  }}
+                />
+              </ListItemIconStyle>
+              <ListItemText disableTypography primary={title} />
+            </ListItemStyle>
+          );
+        })}
       </List>
     </Box>
   );

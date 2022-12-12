@@ -46,7 +46,7 @@ export default function PopoversComponent() {
   };
 
   return (
-    <RootStyle title="Components: Popover | Minimal-UI">
+    <RootStyle title="Components: Popover">
       <Container maxWidth="lg">
         <Stack spacing={3} direction={{ xs: 'column', md: 'row' }}>
           <Block title="Click" sx={style}>

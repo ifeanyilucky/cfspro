@@ -36,7 +36,7 @@ const style = {
 
 export default function TooltipsComponent() {
   return (
-    <RootStyle title="Components: Tooltip | Minimal-UI">
+    <RootStyle title="Components: Tooltip">
       <Container maxWidth="lg">
         <Grid container spacing={3}>
           <Grid item xs={12} md={6}>

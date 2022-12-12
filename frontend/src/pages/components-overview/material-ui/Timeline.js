@@ -95,9 +95,7 @@ export default function TimelineComponent() {
   const reduceTimeLine = slice(TIMELINES, TIMELINES.length - 3);
 
   return (
-    <RootStyle title="Components: Timeline | Minimal-UI">
-      
-
+    <RootStyle title="Components: Timeline">
       <Container maxWidth="lg">
         <Grid container spacing={3}>
           <Grid item xs={12} md={4}>

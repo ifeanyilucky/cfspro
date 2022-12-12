@@ -60,7 +60,7 @@ export default function TabsComponent() {
   };
 
   return (
-    <RootStyle title="Components: Tabs | Minimal-UI">
+    <RootStyle title="Components: Tabs">
       <Container maxWidth="lg">
         <Stack spacing={3}>
           <Stack spacing={3} direction={{ xs: 'column', md: 'row' }}>

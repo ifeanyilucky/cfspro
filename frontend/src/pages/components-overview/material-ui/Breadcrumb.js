@@ -22,7 +22,7 @@ const RootStyle = styled(Page)(({ theme }) => ({
 
 export default function BreadcrumbComponent() {
   return (
-    <RootStyle title="Components: Breadcrumbs | Minimal-UI">
+    <RootStyle title="Components: Breadcrumbs">
       <Container maxWidth="lg">
         <Grid container spacing={3}>
           <Grid item xs={12} md={6}>

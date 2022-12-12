@@ -56,7 +56,7 @@ export default function Login() {
   };
 
   return (
-    <RootStyle title="Login | Minimal-UI">
+    <RootStyle title="Login">
       <AuthLayout>
         Don’t have an account? &nbsp;
         <Link underline="none" variant="subtitle2" component={RouterLink} to={PATH_AUTH.register}>

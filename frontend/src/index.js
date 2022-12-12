@@ -19,7 +19,7 @@ import 'lazysizes/plugins/attrchange/ls.attrchange';
 import 'lazysizes/plugins/object-fit/ls.object-fit';
 import 'lazysizes/plugins/parent-fit/ls.parent-fit';
 
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { Provider as ReduxProvider } from 'react-redux';
@@ -46,8 +46,8 @@ import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
 
 // ----------------------------------------------------------------------
-
-ReactDOM.render(
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
   <HelmetProvider>
     <ReduxProvider store={store}>
       <PersistGate loading={<LoadingScreen />} persistor={persistor}>
@@ -64,8 +64,7 @@ ReactDOM.render(
         </LocalizationProvider>
       </PersistGate>
     </ReduxProvider>
-  </HelmetProvider>,
-  document.getElementById('root')
+  </HelmetProvider>
 );
 
 // If you want your app to work offline and load faster, you can change

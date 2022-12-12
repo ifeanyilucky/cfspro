@@ -18,7 +18,7 @@ const RootStyle = styled(Page)(({ theme }) => ({
 
 export default function ChipsComponent() {
   return (
-    <RootStyle title="Components: Chip | Minimal-UI">
+    <RootStyle title="Components: Chip">
       <Container maxWidth="lg">
         <Grid container spacing={3}>
           <Grid item xs={12} md={6}>

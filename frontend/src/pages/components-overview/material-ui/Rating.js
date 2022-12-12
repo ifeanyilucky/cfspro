@@ -84,9 +84,7 @@ export default function RatingComponent() {
   const [hover, setHover] = useState(-1);
 
   return (
-    <RootStyle title="Components: Rating | Minimal-UI">
-     
-
+    <RootStyle title="Components: Rating">
       <Container maxWidth="lg">
         <Stack spacing={3}>
           <Stack spacing={3} direction={{ xs: 'column', md: 'row' }}>

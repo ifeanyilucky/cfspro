@@ -182,7 +182,6 @@ export default function BankingQuickTransfer() {
     if (amount) {
       handleAutoWidth();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [amount]);
 
   const handleOpenConfirm = () => {

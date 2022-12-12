@@ -29,7 +29,7 @@ const RootStyle = styled(Page)(({ theme }) => ({
 
 export default function LabelsComponent() {
   return (
-    <RootStyle title="Components: Label | Minimal-UI">
+    <RootStyle title="Components: Label">
       <Container maxWidth="lg">
         <Stack spacing={5}>
           <Block title="Filled" sx={style}>

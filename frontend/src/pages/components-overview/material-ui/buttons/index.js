@@ -43,7 +43,7 @@ export default function ButtonsComponent() {
   };
 
   return (
-    <RootStyle title="Components: Buttons | Minimal-UI">
+    <RootStyle title="Components: Buttons">
       <Container maxWidth="lg">
         <TabContext value={value}>
           <TabList onChange={handleChange}>

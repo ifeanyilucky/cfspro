@@ -41,7 +41,7 @@ export default function PaginationComponent() {
   };
 
   return (
-    <RootStyle title="Components: Pagination | Minimal-UI">
+    <RootStyle title="Components: Pagination">
       <Container maxWidth="lg">
         <Grid container spacing={3}>
           <Grid item xs={12} md={6}>

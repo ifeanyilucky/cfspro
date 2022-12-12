@@ -30,147 +30,59 @@ import {
 // utils
 import _ from 'lodash';
 import { fCurrency } from '../../../utils/formatNumber';
-import mockData from '../../../utils/mock-data';
 //
 import Label from '../../Label';
 import Scrollbar from '../../Scrollbar';
 import { MIconButton } from '../../@material-extend';
+import { PATH_DASHBOARD } from 'src/routes/paths';
+import { fToNow } from 'src/utils/formatTime';
 
 // ----------------------------------------------------------------------
 
 // ----------------------------------------------------------------------
-let arr1 = [
-  {
-    name: 'Person1',
-    age: 20
-  },
-  {
-    name: 'Person2',
-    age: 30
-  }
-];
 
-let arr2 = [
-  {
-    name: 'Person1',
-    email: 'person1@mail.com'
-  },
-  {
-    name: 'Person3',
-    age: 25
-  }
-];
-function MoreMenuButton() {
-  const menuRef = useRef(null);
-  const [open, setOpen] = useState(false);
-
-  const handleOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  return (
-    <>
-      <>
-        <MIconButton ref={menuRef} size="large" onClick={handleOpen}>
-          <Icon icon={moreVerticalFill} width={20} height={20} />
-        </MIconButton>
-      </>
-
-      <Menu
-        open={open}
-        anchorEl={menuRef.current}
-        onClose={handleClose}
-        PaperProps={{
-          sx: { width: 200, maxWidth: '100%' }
-        }}
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-      >
-        <MenuItem>
-          <Icon icon={downloadFill} width={20} height={20} />
-          <Typography variant="body2" sx={{ ml: 2 }}>
-            Download
-          </Typography>
-        </MenuItem>
-        <MenuItem>
-          <Icon icon={printerFill} width={20} height={20} />
-          <Typography variant="body2" sx={{ ml: 2 }}>
-            Print
-          </Typography>
-        </MenuItem>
-        <MenuItem>
-          <Icon icon={shareFill} width={20} height={20} />
-          <Typography variant="body2" sx={{ ml: 2 }}>
-            Share
-          </Typography>
-        </MenuItem>
-        <MenuItem>
-          <Icon icon={archiveFill} width={20} height={20} />
-          <Typography variant="body2" sx={{ ml: 2 }}>
-            Archive
-          </Typography>
-        </MenuItem>
-
-        <Divider />
-        <MenuItem sx={{ color: 'error.main' }}>
-          <Icon icon={trash2Outline} width={20} height={20} />
-          <Typography variant="body2" sx={{ ml: 2 }}>
-            Delete
-          </Typography>
-        </MenuItem>
-      </Menu>
-    </>
-  );
-}
-
-export default function AppNewInvoice() {
-  const mergedTrans = _.merge(_.keyBy(arr1), _.keyBy(arr2));
-  console.log(mergedTrans);
+export default function AppNewInvoice({ deposits }) {
+  const transaction = deposits;
   return (
     <Card>
-      <CardHeader title="Recent transactions (0)" sx={{ mb: 3 }} />
+      <CardHeader title={`Recent transactions (${transaction?.length})`} sx={{ mb: 3 }} />
       <Scrollbar>
         <TableContainer sx={{ minWidth: 720 }}>
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Invoice ID</TableCell>
-                <TableCell>Category</TableCell>
-                <TableCell>Price</TableCell>
+                <TableCell>Amount</TableCell>
+                <TableCell>Transaction mode</TableCell>
+                <TableCell>Date</TableCell>
                 <TableCell>Status</TableCell>
                 <TableCell />
               </TableRow>
             </TableHead>
             <TableBody>
-              {/* {MOCK_INVOICES.map((row) => (
-                <TableRow key={row.id}>
-                  <TableCell>{`INV-${row.id}`}</TableCell>
-                  <TableCell>{row.category}</TableCell>
-                  <TableCell>{fCurrency(row.price)}</TableCell>
-                  <TableCell>
-                    <Label
-                      variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-                      color={
-                        (row.status === 'in_progress' && 'warning') ||
-                        (row.status === 'out_of_date' && 'error') ||
-                        'success'
-                      }
-                    >
-                      {sentenceCase(row.status)}
-                    </Label>
-                  </TableCell>
-                  <TableCell align="right">
-                    <MoreMenuButton />
-                  </TableCell>
-                </TableRow>
-              ))} */}
-              <Typography variant="body1" sx={{ textAlign: 'center', margin: '0 auto' }}>
-                No record yet
-              </Typography>
+              {transaction ? (
+                transaction.map((row) => (
+                  <TableRow key={row._id}>
+                    <TableCell>{fCurrency(row?.amount)}</TableCell>
+                    <TableCell>{row?.method}</TableCell>
+                    <TableCell>{fToNow(row?.createdAt)}</TableCell>
+                    <TableCell>
+                      <Label
+                        variant={'ghost'}
+                        color={
+                          (row?.status === 'pending' && 'warning') || (row?.status === 'failed' && 'error') || 'success'
+                        }
+                      >
+                        {sentenceCase(row?.status)}
+                      </Label>
+                    </TableCell>
+                    <TableCell align="right">{/* <MoreMenuButton /> */}</TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <Typography variant="body1" sx={{ textAlign: 'center', margin: '0 auto' }}>
+                  No record yet
+                </Typography>
+              )}
             </TableBody>
           </Table>
         </TableContainer>
@@ -180,7 +92,7 @@ export default function AppNewInvoice() {
 
       <Box sx={{ p: 2, textAlign: 'right' }}>
         <Button
-          to="#"
+          to={PATH_DASHBOARD.transaction}
           size="small"
           color="inherit"
           component={RouterLink}

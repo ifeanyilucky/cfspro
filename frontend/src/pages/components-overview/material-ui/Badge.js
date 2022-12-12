@@ -21,7 +21,7 @@ const RootStyle = styled(Page)(({ theme }) => ({
 
 export default function BadgeComponent() {
   return (
-    <RootStyle title="Components: Badge | Minimal-UI">
+    <RootStyle title="Components: Badge">
       <Container maxWidth="lg">
         <Grid container spacing={3}>
           <Grid item xs={12} md={6}>

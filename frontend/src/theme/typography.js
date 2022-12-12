@@ -18,11 +18,11 @@ function responsiveFontSizes({ sm, md, lg }) {
   };
 }
 
-const FONT_PRIMARY = 'Public Sans, sans-serif'; // Google Font
-const FONT_SECONDARY = 'Plus Jakarta Sans'; // Local Font
+const FONT_PRIMARY = 'CircularStd'; // Google Font
+const FONT_SECONDARY = 'Manrope'; // Local Font
 
 const typography = {
-  fontFamily: FONT_SECONDARY,
+  fontFamily: FONT_PRIMARY,
   fontWeightRegular: 400,
   fontWeightMedium: 600,
   fontWeightBold: 700,

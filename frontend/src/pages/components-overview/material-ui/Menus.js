@@ -93,7 +93,7 @@ export default function MenusComponent() {
   };
 
   return (
-    <RootStyle title="Components: Menus | Minimal-UI">
+    <RootStyle title="Components: Menus">
       <Container maxWidth="lg">
         <Stack direction={{ xs: 'column', md: 'row' }} spacing={3}>
           <Block title="Simple" sx={style}>

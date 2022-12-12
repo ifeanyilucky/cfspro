@@ -16,9 +16,7 @@ const Page = forwardRef(({ children, title = '', ...other }, ref) => {
     track.pageview({
       page_path: pathname
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
   useEffect(() => {
     sendPageViewEvent();
   }, [sendPageViewEvent]);
@@ -26,7 +24,7 @@ const Page = forwardRef(({ children, title = '', ...other }, ref) => {
   return (
     <Box ref={ref} {...other}>
       <Helmet>
-        <title>{title}</title>
+        <title>{title} | Crestfinance Pro</title>
       </Helmet>
       {children}
     </Box>

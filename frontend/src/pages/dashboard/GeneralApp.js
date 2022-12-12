@@ -1,8 +1,10 @@
 // material
 import { Container, Grid, Stack, CardContent, Card, CardHeader, Typography } from '@mui/material';
 // hooks
+import React, { useEffect } from 'react';
 import useAuth from '../../hooks/useAuth';
 import useSettings from '../../hooks/useSettings';
+import { useDispatch, useSelector } from 'src/redux/store';
 // components
 import Page from '../../components/Page';
 import {
@@ -16,16 +18,25 @@ import {
   AppTotalActiveUsers,
   AccountSummary
 } from '../../components/_dashboard/general-app';
+import { getAllDeposits } from 'src/redux/slices/investment';
 import CopyClipboard from '../../components/CopyClipboard';
 
 // ----------------------------------------------------------------------
 
 export default function GeneralApp() {
   const { themeStretch } = useSettings();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getAllDeposits());
+  }, [dispatch]);
+
+  const { deposits } = useSelector((state) => state.investment);
+
   const { user } = useAuth();
   const referralLink = `https://crestfinancepro.com/ref=${user.referralId}`;
   return (
-    <Page title="Crestfinance Pro - Dashboard">
+    <Page title="Dashboard">
       <Container maxWidth={themeStretch ? false : 'xl'}>
         <Grid container spacing={3}>
           <Grid item xs={12} md={8}>
@@ -35,11 +46,7 @@ export default function GeneralApp() {
         <AccountSummary user={user} />
         <Grid container spacing={3}>
           <Grid item xs={12} lg={8}>
-            <AppNewInvoice />
-          </Grid>
-
-          <Grid item xs={12} lg={8}>
-            <AppNewInvoice />
+            <AppNewInvoice deposits={deposits} />
           </Grid>
         </Grid>
         <Grid mt={5}>

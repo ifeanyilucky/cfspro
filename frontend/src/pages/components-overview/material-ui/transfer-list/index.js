@@ -28,7 +28,7 @@ const RootStyle = styled(Page)(({ theme }) => ({
 
 export default function TransferListComponent() {
   return (
-    <RootStyle title="Components: Transfer List | Minimal-UI">
+    <RootStyle title="Components: Transfer List">
       <Container maxWidth="lg">
         <Stack spacing={5}>
           <Block title="Simple" sx={style}>

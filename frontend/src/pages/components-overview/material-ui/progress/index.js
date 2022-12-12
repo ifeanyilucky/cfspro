@@ -67,7 +67,7 @@ export default function ProgressComponent() {
   }, []);
 
   return (
-    <RootStyle title="Components: Progress | Minimal-UI">
+    <RootStyle title="Components: Progress">
       <Container maxWidth="lg">
         <Stack spacing={5}>
           <Block title="Circular">

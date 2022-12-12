@@ -23,7 +23,7 @@ const RootStyle = styled(Page)(({ theme }) => ({
 
 export default function StepperComponent() {
   return (
-    <RootStyle title="Components: StepperView | Minimal-UI">
+    <RootStyle title="Components: StepperView">
       <Container maxWidth="lg">
         <Stack spacing={5}>
           <Block title="Horizontal Linear Stepper">

@@ -76,7 +76,7 @@ export default function SnackbarComponent() {
   };
 
   return (
-    <RootStyle title="Components: Snackbar | Minimal-UI">
+    <RootStyle title="Components: Snackbar">
       <Container maxWidth="lg">
         <Grid container spacing={3}>
           <Grid item xs={12} md={6}>

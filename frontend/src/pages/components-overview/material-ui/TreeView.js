@@ -58,7 +58,7 @@ const StyledTreeItem = styled((props) => <TreeItem {...props} TransitionComponen
 
 export default function TreesViewComponent() {
   return (
-    <RootStyle title="Components: Tree View | Minimal-UI">
+    <RootStyle title="Components: Tree View">
       <Container maxWidth="lg">
         <Stack spacing={3} direction={{ xs: 'column', md: 'row' }}>
           <Block title="Basic">

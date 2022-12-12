@@ -12,7 +12,6 @@ import fakeRequest from '../../../utils/fakeRequest';
 
 // ----------------------------------------------------------------------
 
-// eslint-disable-next-line consistent-return
 function maxLength(object) {
   if (object.target.value.length > object.target.maxLength) {
     return (object.target.value = object.target.value.slice(0, object.target.maxLength));

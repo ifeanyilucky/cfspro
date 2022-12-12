@@ -37,7 +37,7 @@ export default function PickersComponent() {
   };
 
   return (
-    <RootStyle title="Components: Pickers | Minimal-UI">
+    <RootStyle title="Components: Pickers">
       <Container maxWidth="lg">
         <TabContext value={value}>
           <TabList onChange={handleChange} aria-label="lab API tabs example">

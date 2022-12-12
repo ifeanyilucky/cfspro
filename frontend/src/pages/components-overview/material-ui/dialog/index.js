@@ -33,7 +33,7 @@ const RootStyle = styled(Page)(({ theme }) => ({
 
 export default function DialogComponent() {
   return (
-    <RootStyle title="Components: Dialog | Minimal-UI">
+    <RootStyle title="Components: Dialog">
       <Container maxWidth="lg">
         <Grid container spacing={3}>
           <Grid item xs={12} md={4}>

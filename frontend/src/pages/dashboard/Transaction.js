@@ -135,7 +135,7 @@ export default function Transaction() {
   const isProductNotFound = filteredTransaction.length === 0;
 
   return (
-    <Page title="Ecommerce: Product List | Minimal-UI">
+    <Page title="Account history">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
           heading="Account History"

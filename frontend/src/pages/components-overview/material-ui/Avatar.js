@@ -26,7 +26,7 @@ export default function AvatarComponent() {
   const theme = useTheme();
 
   return (
-    <RootStyle title="Components: Avatar | Minimal-UI">
+    <RootStyle title="Components: Avatar">
       <Container maxWidth="lg">
         <Grid container spacing={3}>
           <Grid item xs={12} md={4}>

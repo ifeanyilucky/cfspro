@@ -38,7 +38,7 @@ export default function Animate() {
   };
 
   return (
-    <RootStyle title="Components: Animate | Minimal-UI">
+    <RootStyle title="Components: Animate">
       <Container maxWidth="lg">
         <TabContext value={value}>
           <Box sx={{ mb: 5 }}>

@@ -35,7 +35,7 @@ export default function RadioButtons() {
   };
 
   return (
-    <RootStyle title="Components: Radio Buttons | Minimal-UI">
+    <RootStyle title="Components: Radio Buttons">
       <Container maxWidth="lg">
         <Stack spacing={3} direction={{ xs: 'column', md: 'row' }}>
           <Stack spacing={3} sx={{ width: 1 }}>

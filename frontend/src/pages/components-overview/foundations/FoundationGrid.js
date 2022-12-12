@@ -41,7 +41,7 @@ export default function FoundationGrid() {
   };
 
   return (
-    <RootStyle title="Foundations: Grid | Minimal-UI">
+    <RootStyle title="Foundations: Grid">
       <Container maxWidth="lg">
         <Stack spacing={5}>
           <Block title="Spacing">

@@ -28,7 +28,7 @@ const RootStyle = styled(Page)(({ theme }) => ({
 
 export default function Switches() {
   return (
-    <RootStyle title="Components: Switches | Minimal-UI">
+    <RootStyle title="Components: Switches">
       <Container maxWidth="lg">
         <Stack spacing={3} direction={{ xs: 'column', md: 'row' }}>
           <Stack spacing={3} sx={{ width: 1 }}>

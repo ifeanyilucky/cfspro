@@ -20,7 +20,7 @@ const RootStyle = styled(Page)(({ theme }) => ({
 
 export default function TableComponent() {
   return (
-    <RootStyle title="Components: Table | Minimal-UI">
+    <RootStyle title="Components: Table">
       <Container maxWidth="lg">
         <Stack spacing={5}>
           <Card>

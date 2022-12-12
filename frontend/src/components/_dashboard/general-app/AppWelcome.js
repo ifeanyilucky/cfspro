@@ -10,7 +10,6 @@ import { SeoIllustration } from '../../../assets';
 const RootStyle = styled(Card)(({ theme }) => ({
   boxShadow: 'none',
   textAlign: 'center',
-  backgroundColor: theme.palette.primary.darker,
   color: theme.palette.primary.lighter,
   [theme.breakpoints.up('md')]: {
     height: '100%',
@@ -32,7 +31,7 @@ export default function AppWelcome({ displayName }) {
     <RootStyle>
       <CardContent
         sx={{
-          p: { md: 0 },
+          py: { md: 3 },
           pl: { md: 5 }
         }}
       >

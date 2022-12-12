@@ -20,7 +20,7 @@ const RootStyle = styled(Page)(({ theme }) => ({
 
 export default function AlertsComponent() {
   return (
-    <RootStyle title="Components: Alert | Minimal-UI">
+    <RootStyle title="Components: Alert">
       <Container maxWidth="lg">
         <Stack spacing={5}>
           <Block title="Simple">

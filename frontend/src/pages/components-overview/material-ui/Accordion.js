@@ -38,7 +38,7 @@ export default function AccordionComponent() {
   };
 
   return (
-    <RootStyle title="Components: Accordion | Minimal-UI">
+    <RootStyle title="Components: Accordion">
       <Container>
         <Block title="Simple" sx={{ mb: 5 }}>
           {MOCK_ACCORDIONS.map((accordion, index) => (

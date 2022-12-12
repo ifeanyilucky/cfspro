@@ -13,7 +13,7 @@ import LoadingScreen from '../components/LoadingScreen';
 // ----------------------------------------------------------------------
 
 const Loadable = (Component) => (props) => {
-  // eslint-disable-next-line react-hooks/rules-of-hooks
+  // eslint-disable-next-line
   const { pathname } = useLocation();
   const isDashboard = pathname.includes('/dashboard');
 
@@ -74,7 +74,7 @@ export default function Router() {
         </AuthGuard>
       ),
       children: [
-        { element: <GeneralApp /> },
+        { element: <GeneralApp />, path: '/' },
         { path: 'deposit', element: <Deposit /> },
         { path: 'deposit/payment', element: <Payment /> },
         { path: 'buy-plan', element: <BuyPlan /> },

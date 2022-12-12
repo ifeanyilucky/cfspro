@@ -37,7 +37,7 @@ export default function TextFieldComponent() {
   // ----------------------------------------------------------------------
 
   return (
-    <RootStyle title="Components: TextField | Minimal-UI">
+    <RootStyle title="Components: TextField">
       <Container maxWidth="lg">
         <form noValidate autoComplete="off">
           <TabContext value={value}>

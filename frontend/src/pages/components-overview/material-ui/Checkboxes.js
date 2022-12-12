@@ -45,7 +45,7 @@ export default function RadioButtons() {
   };
 
   return (
-    <RootStyle title="Components: Checkboxes | Minimal-UI">
+    <RootStyle title="Components: Checkboxes">
       <Container maxWidth="lg">
         <Grid container spacing={3}>
           <Grid item xs={12} md={6}>

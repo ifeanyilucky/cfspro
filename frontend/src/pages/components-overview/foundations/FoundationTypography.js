@@ -64,7 +64,7 @@ function useWidth() {
   const keys = [...theme.breakpoints.keys].reverse();
   return (
     keys.reduce((output, key) => {
-      // eslint-disable-next-line react-hooks/rules-of-hooks
+      // eslint-disable-next-line
       const matches = useMediaQuery(theme.breakpoints.up(key));
       return !output && matches ? key : output;
     }, null) || 'xs'
@@ -89,7 +89,7 @@ function GetFontInfo({ name }) {
 
 export default function FoundationTypography() {
   return (
-    <RootStyle title="Foundations: Typography | Minimal-UI">
+    <RootStyle title="Foundations: Typography">
       <Container maxWidth="lg">
         <Grid container spacing={3}>
           <Grid item xs={12} md={3}>

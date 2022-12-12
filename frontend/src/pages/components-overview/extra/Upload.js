@@ -76,7 +76,7 @@ export default function Upload() {
   };
 
   return (
-    <RootStyle title="Components: Upload | Minimal-UI">
+    <RootStyle title="Components: Upload">
       <Container maxWidth="lg">
         <Stack spacing={5}>
           <Card>

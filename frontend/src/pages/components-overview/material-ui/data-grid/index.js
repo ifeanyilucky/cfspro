@@ -20,7 +20,7 @@ const RootStyle = styled(Page)(({ theme }) => ({
 
 export default function DataGridComponent() {
   return (
-    <RootStyle title="Components: DataGrid | Minimal-UI">
+    <RootStyle title="Components: DataGrid">
       <Container maxWidth="lg">
         <Stack spacing={5}>
           <Card>

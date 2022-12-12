@@ -98,7 +98,7 @@ export default function ListsComponent() {
   };
 
   return (
-    <RootStyle title="Components: Lists | Minimal-UI">
+    <RootStyle title="Components: Lists">
       <Container maxWidth="lg">
         <Grid container spacing={3}>
           <Grid item xs={12} md={6}>
