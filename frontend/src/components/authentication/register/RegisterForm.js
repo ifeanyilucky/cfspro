@@ -55,7 +55,7 @@ export default function RegisterForm() {
       } catch (error) {
         console.error(error);
         if (isMountedRef.current) {
-          setErrors({ afterSubmit: error.message });
+          setErrors({ afterSubmit: error.response.data.message });
           setSubmitting(false);
         }
       }

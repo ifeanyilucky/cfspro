@@ -24,7 +24,7 @@ import {
 import { useDispatch, useSelector } from '../../redux/store';
 import { getProducts, deleteProduct } from '../../redux/slices/product';
 // utils
-import { fDate } from '../../utils/formatTime';
+import { fDate, fToNow } from '../../utils/formatTime';
 import { fCurrency } from '../../utils/formatNumber';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
@@ -162,10 +162,8 @@ export default function Transaction() {
                 />
                 <TableBody>
                   {filteredTransaction.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { _id, createdAt, amount, status, method } = row;
-
                     return (
-                      <TableRow hover key={_id} tabIndex={-1}>
+                      <TableRow hover key={row?._id} tabIndex={-1}>
                         <TableCell padding="checkbox" component="th" scope="row">
                           <Box
                             sx={{
@@ -175,7 +173,7 @@ export default function Transaction() {
                             }}
                           >
                             <Typography variant="subtitle2" noWrap>
-                              {amount && fCurrency(amount)}
+                              {row?.amount && fCurrency(row?.amount)}
                             </Typography>
                           </Box>
                         </TableCell>
@@ -188,23 +186,25 @@ export default function Transaction() {
                             }}
                           >
                             <Typography variant="subtitle2" noWrap>
-                              {method && method}
+                              {row?.method && row?.method}
                             </Typography>
                           </Box>
                         </TableCell>
                         <TableCell style={{ minWidth: 160 }}>
-                          {status && (
+                          {row?.status && (
                             <Label
                               variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
                               color={
-                                (status === 'failed' && 'error') || (status === 'pending' && 'warning') || 'success'
+                                (row?.status === 'failed' && 'error') ||
+                                (row?.status === 'pending' && 'warning') ||
+                                'success'
                               }
                             >
-                              {sentenceCase(status)}
+                              {sentenceCase(row?.status)}
                             </Label>
                           )}
                         </TableCell>
-                        <TableCell>{createdAt && fDate(createdAt)}</TableCell>
+                        <TableCell>{row?.createdAt && fToNow(row?.createdAt)}</TableCell>
                       </TableRow>
                     );
                   })}

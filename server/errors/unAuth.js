@@ -1,10 +1,10 @@
 const CustomApiError = require('./customError');
 
-class UnAuthenticationError extends CustomApiError {
+class UnAuthError extends CustomApiError {
   constructor(message) {
     super(message);
     this.statusCode = 401;
   }
 }
 
-module.exports = UnAuthenticationError;
+module.exports = UnAuthError;

@@ -31,13 +31,13 @@ export default function Withdraw() {
   });
   const formik = useFormik({
     initialValues: {
-      amount: 0,
+      amount: '',
       otp: 'USD'
     },
     validationSchema: ValidSchema,
     onSubmit: (values) => {
       console.log(values);
-      dispatch(requestWithdrawal(values));
+      dispatch(requestWithdrawal({ ...values, otp: `${values.otp}` }));
     }
   });
   const { errors, getFieldProps, handleSubmit, values, touched } = formik;

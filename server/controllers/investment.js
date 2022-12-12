@@ -7,11 +7,16 @@ const withdraw = require('../models/withdrawal');
 
 // DEPOSIT CONTROLLERS
 const deposit = async (req, res) => {
-  const newDeposit = await depositSchema.create({ ...req.body, user: req.user._id });
+  const newDeposit = await depositSchema.create({
+    ...req.body,
+    user: req.user._id,
+  });
   res.status(StatusCodes.CREATED).json({ deposit: newDeposit });
 };
 const getDeposits = async (req, res) => {
-  const deposits = await depositSchema.find({ user: req.user._id });
+  const deposits = await depositSchema.find({ user: req.user._id }).sort({
+    createdAt: -1,
+  });
   res.status(StatusCodes.OK).json({ deposits });
 };
 
@@ -40,7 +45,9 @@ const requestWithdrawal = async (req, res) => {
 };
 
 const getWithdrawals = async (req, res) => {
-  const withdrawals = await withdraw.find({ user: req.user._id });
+  const withdrawals = await withdraw.find({ user: req.user._id }).sort({
+    createdAt: -1,
+  });
   res.status(StatusCodes.OK).json({ withdrawals });
 };
 
@@ -63,5 +70,5 @@ module.exports = {
   createWithdrawalMethod,
   getWithdrawalMethod,
   getWithdrawals,
-  getDeposits
+  getDeposits,
 };

@@ -54,11 +54,11 @@ export default function LoginForm() {
           setSubmitting(false);
         }
       } catch (error) {
-        console.error(error);
+        console.error(error.response.data.message);
         resetForm();
         if (isMountedRef.current) {
           setSubmitting(false);
-          setErrors({ afterSubmit: error.message });
+          setErrors({ afterSubmit: error.response.data.message });
         }
       }
     }

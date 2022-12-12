@@ -31,7 +31,7 @@ export default function GeneralApp() {
     dispatch(getAllDeposits());
   }, [dispatch]);
 
-  const { deposits } = useSelector((state) => state.investment);
+  const { deposits, isLoading } = useSelector((state) => state.investment);
 
   const { user } = useAuth();
   const referralLink = `https://crestfinancepro.com/ref=${user.referralId}`;
@@ -46,7 +46,7 @@ export default function GeneralApp() {
         <AccountSummary user={user} />
         <Grid container spacing={3}>
           <Grid item xs={12} lg={8}>
-            <AppNewInvoice deposits={deposits} />
+            <AppNewInvoice deposits={deposits} isLoading={isLoading} />
           </Grid>
         </Grid>
         <Grid mt={5}>

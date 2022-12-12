@@ -41,8 +41,11 @@ import { fToNow } from 'src/utils/formatTime';
 
 // ----------------------------------------------------------------------
 
-export default function AppNewInvoice({ deposits }) {
+export default function AppNewInvoice({ deposits, isLoading }) {
   const transaction = deposits;
+  if (isLoading) {
+    return 'Loading...';
+  }
   return (
     <Card>
       <CardHeader title={`Recent transactions (${transaction?.length})`} sx={{ mb: 3 }} />
@@ -60,20 +63,23 @@ export default function AppNewInvoice({ deposits }) {
             </TableHead>
             <TableBody>
               {transaction.length ? (
-                transaction.map((row) => {
-                  const { method, amount, createdAt, status, _id } = row;
+                transaction.slice(0, 5).map((row) => {
                   return (
-                    <TableRow key={_id}>
-                      <TableCell>{amount && fCurrency(amount)}</TableCell>
-                      <TableCell>{method && method}</TableCell>
-                      <TableCell>{createdAt && fToNow(createdAt)}</TableCell>
+                    <TableRow key={row?._id}>
+                      <TableCell>{row?.amount && fCurrency(row?.amount)}</TableCell>
+                      <TableCell>{row?.method && row?.method}</TableCell>
+                      <TableCell>{row?.createdAt && fToNow(row?.createdAt)}</TableCell>
                       <TableCell>
-                        {status && (
+                        {row?.status && (
                           <Label
                             variant={'ghost'}
-                            color={(status === 'pending' && 'warning') || (status === 'failed' && 'error') || 'success'}
+                            color={
+                              (row?.status === 'pending' && 'warning') ||
+                              (row?.status === 'failed' && 'error') ||
+                              'success'
+                            }
                           >
-                            {sentenceCase(status)}
+                            {sentenceCase(row?.status)}
                           </Label>
                         )}
                       </TableCell>
