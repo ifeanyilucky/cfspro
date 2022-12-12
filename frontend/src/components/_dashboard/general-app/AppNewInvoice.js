@@ -59,25 +59,28 @@ export default function AppNewInvoice({ deposits }) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {transaction ? (
-                transaction.map((row) => (
-                  <TableRow key={row._id}>
-                    <TableCell>{fCurrency(row?.amount)}</TableCell>
-                    <TableCell>{row?.method}</TableCell>
-                    <TableCell>{fToNow(row?.createdAt)}</TableCell>
-                    <TableCell>
-                      <Label
-                        variant={'ghost'}
-                        color={
-                          (row?.status === 'pending' && 'warning') || (row?.status === 'failed' && 'error') || 'success'
-                        }
-                      >
-                        {sentenceCase(row?.status)}
-                      </Label>
-                    </TableCell>
-                    <TableCell align="right">{/* <MoreMenuButton /> */}</TableCell>
-                  </TableRow>
-                ))
+              {transaction.length ? (
+                transaction.map((row) => {
+                  const { method, amount, createdAt, status, _id } = row;
+                  return (
+                    <TableRow key={_id}>
+                      <TableCell>{amount && fCurrency(amount)}</TableCell>
+                      <TableCell>{method && method}</TableCell>
+                      <TableCell>{createdAt && fToNow(createdAt)}</TableCell>
+                      <TableCell>
+                        {status && (
+                          <Label
+                            variant={'ghost'}
+                            color={(status === 'pending' && 'warning') || (status === 'failed' && 'error') || 'success'}
+                          >
+                            {sentenceCase(status)}
+                          </Label>
+                        )}
+                      </TableCell>
+                      <TableCell align="right">{/* <MoreMenuButton /> */}</TableCell>
+                    </TableRow>
+                  );
+                })
               ) : (
                 <Typography variant="body1" sx={{ textAlign: 'center', margin: '0 auto' }}>
                   No record yet

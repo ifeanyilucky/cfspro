@@ -175,7 +175,7 @@ export default function Transaction() {
                             }}
                           >
                             <Typography variant="subtitle2" noWrap>
-                              {fCurrency(amount)}
+                              {amount && fCurrency(amount)}
                             </Typography>
                           </Box>
                         </TableCell>
@@ -188,19 +188,23 @@ export default function Transaction() {
                             }}
                           >
                             <Typography variant="subtitle2" noWrap>
-                              {method}
+                              {method && method}
                             </Typography>
                           </Box>
                         </TableCell>
                         <TableCell style={{ minWidth: 160 }}>
-                          <Label
-                            variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-                            color={(status === 'failed' && 'error') || (status === 'pending' && 'warning') || 'success'}
-                          >
-                            {sentenceCase(status)}
-                          </Label>
+                          {status && (
+                            <Label
+                              variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
+                              color={
+                                (status === 'failed' && 'error') || (status === 'pending' && 'warning') || 'success'
+                              }
+                            >
+                              {sentenceCase(status)}
+                            </Label>
+                          )}
                         </TableCell>
-                        <TableCell>{fDate(createdAt)}</TableCell>
+                        <TableCell>{createdAt && fDate(createdAt)}</TableCell>
                       </TableRow>
                     );
                   })}
