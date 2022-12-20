@@ -57,10 +57,6 @@ export default function UserProfile() {
 
   useEffect(() => {
     dispatch(getProfile());
-    dispatch(getPosts());
-    dispatch(getFollowers());
-    dispatch(getFriends());
-    dispatch(getGallery());
   }, [dispatch]);
 
   const handleChangeTab = (event, newValue) => {

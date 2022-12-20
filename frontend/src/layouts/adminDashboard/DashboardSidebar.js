@@ -148,7 +148,7 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
                 <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                   {navigator.onLine ? 'online' : 'offline'}
                 </Typography>
-                <Chip label={fCurrency(user?.accountBalance)} />
+                <Chip label={'Admin'} />
               </Box>
             </AccountStyle>
           </Link>
@@ -158,24 +158,6 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
       <NavSection navConfig={sidebarConfig} isShow={!isCollapse} />
 
       <Box sx={{ flexGrow: 1 }} />
-
-      {!isCollapse && (
-        <Stack spacing={3} alignItems="center" sx={{ px: 5, pb: 5, mt: 10, width: 1, textAlign: 'center' }}>
-          <DocIllustration sx={{ width: 1 }} />
-          <div>
-            <Typography gutterBottom variant="subtitle1">
-              Hi, {user?.firstName}
-            </Typography>
-            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              Need help?
-              <br /> Contact our 24/7 customer support center
-            </Typography>
-          </div>
-          <RouterLink to={PATH_DASHBOARD.support}>
-            <Button variant="contained">Contact us</Button>
-          </RouterLink>
-        </Stack>
-      )}
     </Scrollbar>
   );
 

@@ -5,26 +5,29 @@ const DepositSchema = new mongoose.Schema(
     user: {
       type: mongoose.Types.ObjectId,
       ref: 'User',
-      required: [true, 'User not provided']
+      required: [true, 'User not provided'],
     },
     amount: {
       type: Number,
-      required: [true, 'Please enter amount']
+      required: [true, 'Please enter amount'],
     },
     method: {
       type: String,
-      required: [true, 'Please provide payment method']
+      required: [true, 'Please provide payment method'],
     },
     paymentProof: {
       type: String,
-      required: [true, 'Please provide proof of payment']
+      required: [true, 'Please provide proof of payment'],
     },
 
     status: {
       type: String,
       enum: ['completed', 'failed', 'pending'],
-      default: 'pending'
-    }
+      default: 'pending',
+    },
+    transactionId: {
+      type: String,
+    },
   },
   { timestamps: true }
 );

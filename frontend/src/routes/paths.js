@@ -6,6 +6,7 @@ function path(root, sublink) {
 
 const ROOTS_AUTH = '/auth';
 const ROOTS_DASHBOARD = '/';
+const ROOT_ADMIN = '/admin';
 
 // ----------------------------------------------------------------------
 
@@ -15,6 +16,14 @@ export const PATH_AUTH = {
   register: path(ROOTS_AUTH, '/register'),
   resetPassword: path(ROOTS_AUTH, '/reset-password'),
   verify: path(ROOTS_AUTH, '/verify')
+};
+
+export const PATH_ADMIN = {
+  root: ROOT_ADMIN,
+  overview: path(ROOT_ADMIN, '/overview'),
+  depositRequest: path(ROOT_ADMIN, '/deposit-request'),
+  allUser: path(ROOT_ADMIN, '/all-user'),
+  investments: path(ROOT_ADMIN, '/investments')
 };
 
 export const PATH_DASHBOARD = {

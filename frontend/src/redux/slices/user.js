@@ -58,7 +58,7 @@ const slice = createSlice({
 
     // DELETE USERS
     deleteUser(state, action) {
-      const deleteUser = filter(state.userList, (user) => user.id !== action.payload);
+      const deleteUser = filter(state.userList, (user) => user._id !== action.payload);
       state.userList = deleteUser;
     },
 
@@ -153,59 +153,28 @@ export function getProfile() {
 
 // ----------------------------------------------------------------------
 
-export function getPosts() {
-  return async (dispatch) => {
-    dispatch(slice.actions.startLoading());
-    try {
-      const response = await axios.get('/api/user/posts');
-      dispatch(slice.actions.getPostsSuccess(response.data.posts));
-    } catch (error) {
-      dispatch(slice.actions.hasError(error));
-    }
-  };
-}
+export const removeUser = (userId) => async (dispatch) => {
+  dispatch(slice.actions.startLoading());
+  try {
+    const { data } = await api.deleteUser(userId);
+    dispatch(slice.actions.deleteUser(data.user));
+  } catch (error) {
+    dispatch(slice.actions.hasError(error));
+  }
+};
 
 // ----------------------------------------------------------------------
-
-export function getFollowers() {
-  return async (dispatch) => {
-    dispatch(slice.actions.startLoading());
-    try {
-      const response = await axios.get('/api/user/social/followers');
-      dispatch(slice.actions.getFollowersSuccess(response.data.followers));
-    } catch (error) {
-      dispatch(slice.actions.hasError(error));
-    }
-  };
-}
-
+export const updateUser = (payload, userId) => async (dispatch) => {
+  dispatch(slice.actions.startLoading());
+  try {
+    const { data } = await api.editUser(payload, userId);
+  } catch (error) {
+    dispatch(slice.actions.hasError(error));
+  }
+};
 // ----------------------------------------------------------------------
 
-export function getFriends() {
-  return async (dispatch) => {
-    dispatch(slice.actions.startLoading());
-    try {
-      const response = await axios.get('/api/user/social/friends');
-      dispatch(slice.actions.getFriendsSuccess(response.data.friends));
-    } catch (error) {
-      dispatch(slice.actions.hasError(error));
-    }
-  };
-}
-
 // ----------------------------------------------------------------------
-
-export function getGallery() {
-  return async (dispatch) => {
-    dispatch(slice.actions.startLoading());
-    try {
-      const response = await axios.get('/api/user/social/gallery');
-      dispatch(slice.actions.getGallerySuccess(response.data.gallery));
-    } catch (error) {
-      dispatch(slice.actions.hasError(error));
-    }
-  };
-}
 
 // ----------------------------------------------------------------------
 
@@ -213,7 +182,7 @@ export function getUserList() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('/api/user/manage-users');
+      const response = await api.getUserList();
       dispatch(slice.actions.getUserListSuccess(response.data.users));
     } catch (error) {
       dispatch(slice.actions.hasError(error));

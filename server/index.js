@@ -6,6 +6,7 @@ const morgan = require('morgan');
 const connectMongoose = require('./db/mongodb');
 const authRouter = require('./routes/auth');
 const investmentRouter = require('./routes/investment');
+const staticRouter = require('./routes/static');
 
 // middlewares
 const notFound = require('./middlewares/not-found');
@@ -23,7 +24,7 @@ app.use(morgan('dev'));
 app.use(
   cors({
     credentials: true,
-    origin: '*'
+    origin: '*',
   })
 );
 app.get('/welcome', function (req, res) {
@@ -31,7 +32,8 @@ app.get('/welcome', function (req, res) {
 });
 app.use('/api', authRouter);
 app.use('/api', investmentRouter);
-app.get('/', (req, res) => {
+app.use('/api/static', staticRouter);
+app.get('/api/static', (req, res) => {
   res.send('<h1>Crestfinance Pro API</h1>');
 });
 

@@ -32,7 +32,7 @@ export default function Withdraw() {
   const formik = useFormik({
     initialValues: {
       amount: '',
-      otp: 'USD'
+      otp: ''
     },
     validationSchema: ValidSchema,
     onSubmit: (values) => {

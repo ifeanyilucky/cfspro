@@ -1,5 +1,6 @@
 import { createContext, useEffect, useReducer } from 'react';
 import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom';
 // utils
 import axios from '../utils/axios';
 import { isValidToken, setSession } from '../utils/jwt';
@@ -8,6 +9,7 @@ import { MIconButton } from '../components/@material-extend';
 import { Icon } from '@iconify/react';
 import closeFill from '@iconify/icons-eva/close-fill';
 import jwtDecode from 'jwt-decode';
+import { PATH_DASHBOARD, PATH_ADMIN } from 'src/routes/paths';
 
 // ----------------------------------------------------------------------
 
@@ -68,6 +70,7 @@ AuthProvider.propTypes = {
 
 function AuthProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const navigate = useNavigate();
 
   // const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   useEffect(() => {
@@ -114,7 +117,7 @@ function AuthProvider({ children }) {
     initialize();
   }, []);
 
-  const login = async (payload, setErrors, setSubmitting, resetForm) => {
+  const login = async (payload) => {
     const { data } = await axios.post('/login', payload);
 
     const { token, user } = data;
@@ -126,6 +129,9 @@ function AuthProvider({ children }) {
         user
       }
     });
+    if (user.role === 'admin') {
+      navigate(PATH_ADMIN.overview, { replace: true });
+    }
   };
 
   const register = async (payload) => {

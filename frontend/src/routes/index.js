@@ -3,10 +3,11 @@ import { Navigate, useRoutes, useLocation } from 'react-router-dom';
 // layouts
 import DashboardLayout from '../layouts/dashboard';
 import LogoOnlyLayout from '../layouts/LogoOnlyLayout';
+import AdminDashboardLayout from '../layouts/adminDashboard';
 // guards
 import GuestGuard from '../guards/GuestGuard';
 import AuthGuard from '../guards/AuthGuard';
-// import RoleBasedGuard from '../guards/RoleBasedGuard';
+import RoleBasedGuard from '../guards/RoleBasedGuard';
 // components
 import LoadingScreen from '../components/LoadingScreen';
 
@@ -39,6 +40,8 @@ const Loadable = (Component) => (props) => {
 };
 
 export default function Router() {
+  const adminRoles = ['admin'];
+  const userRoles = ['customer'];
   return useRoutes([
     {
       path: '/auth',
@@ -70,7 +73,9 @@ export default function Router() {
       path: '/',
       element: (
         <AuthGuard>
-          <DashboardLayout />
+          <RoleBasedGuard accessibleRoles={userRoles}>
+            <DashboardLayout />
+          </RoleBasedGuard>
         </AuthGuard>
       ),
       children: [
@@ -97,6 +102,23 @@ export default function Router() {
             { path: ':name/edit', element: <UserCreate /> }
           ]
         }
+      ]
+    },
+    {
+      path: '/admin',
+      element: (
+        <AuthGuard>
+          <RoleBasedGuard accessibleRoles={adminRoles}>
+            <AdminDashboardLayout />
+          </RoleBasedGuard>
+        </AuthGuard>
+      ),
+      children: [
+        { element: <Navigate to="/admin/overview" replace /> },
+        { element: <AdminOverview />, path: 'overview' },
+        { element: <DepositRequest />, path: 'deposit-request' },
+        { element: <UserList />, path: 'all-user' },
+        { element: <Investments />, path: 'investments' }
       ]
     },
 
@@ -126,11 +148,16 @@ const WithdrawalStep2 = Loadable(lazy(() => import('../pages/dashboard/Withdrawa
 const Transaction = Loadable(lazy(() => import('../pages/dashboard/Transaction')));
 const Referrals = Loadable(lazy(() => import('../pages/dashboard/Referrals')));
 
+// ADMIN DASHBOARD
+const AdminOverview = Loadable(lazy(() => import('../pages/admin/Overview')));
+const DepositRequest = Loadable(lazy(() => import('../pages/admin/DepositRequest')));
+const UserList = Loadable(lazy(() => import('../pages/admin/UserList')));
+const Investments = Loadable(lazy(() => import('../pages/admin/Investments')));
+
 const NotFound = Loadable(lazy(() => import('../pages/NotFound')));
 
 const UserProfile = Loadable(lazy(() => import('../pages/dashboard/UserProfile')));
 const UserCards = Loadable(lazy(() => import('../pages/dashboard/UserCards')));
-const UserList = Loadable(lazy(() => import('../pages/dashboard/UserList')));
 const UserAccount = Loadable(lazy(() => import('../pages/dashboard/UserAccount')));
 const UserCreate = Loadable(lazy(() => import('../pages/dashboard/UserCreate')));
 // Main

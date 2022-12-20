@@ -20,30 +20,13 @@ const RootStyle = styled(Card)(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-const TOTAL = 18765;
-const PERCENT = 2.6;
-const CHART_DATA = [{ data: [111, 136, 76, 108, 74, 54, 57, 84] }];
-
-export default function BookingTotalIncomes() {
+export default function BookingTotalIncomes({ title, amount }) {
   return (
     <RootStyle>
       <Stack direction="row" justifyContent="space-between" sx={{ mb: 3 }}>
         <div>
-          <Typography sx={{ mb: 2, typography: 'subtitle2' }}>Total Incomes</Typography>
-          <Typography sx={{ typography: 'h3' }}>{fCurrency(TOTAL)}</Typography>
-        </div>
-
-        <div>
-          <Stack direction="row" alignItems="center" justifyContent="flex-end" sx={{ mb: 0.6 }}>
-            <Icon width={20} height={20} icon={PERCENT >= 0 ? trendingUpFill : trendingDownFill} />
-            <Typography variant="subtitle2" component="span" sx={{ ml: 0.5 }}>
-              {PERCENT > 0 && '+'}
-              {fPercent(PERCENT)}
-            </Typography>
-          </Stack>
-          <Typography variant="body2" component="span" sx={{ opacity: 0.72 }}>
-            &nbsp;than last month
-          </Typography>
+          <Typography sx={{ mb: 2, typography: 'subtitle2' }}>{title}</Typography>
+          <Typography sx={{ typography: 'h3' }}>{fCurrency(amount)}</Typography>
         </div>
       </Stack>
     </RootStyle>

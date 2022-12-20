@@ -134,3 +134,27 @@ export const addDeposit = (payload) => async (dispatch) => {
     console.log(error);
   }
 };
+
+// ADMIN ACTIONS
+export function getStaticDeposits() {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const { data } = await api.getStaticDeposits();
+      dispatch(slice.actions.getDepositsSuccess(data.deposits));
+    } catch (error) {
+      dispatch(slice.actions.hasError());
+    }
+  };
+}
+
+export const getStaticWithdrawals = (payload) => async (dispatch) => {
+  dispatch(slice.actions.startLoading);
+  try {
+    const { data } = await api.deposit(payload);
+
+    dispatch(slice.actions.addDeposit(data.deposits));
+  } catch (error) {
+    console.log(error);
+  }
+};
