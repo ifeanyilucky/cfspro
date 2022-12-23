@@ -134,7 +134,7 @@ export default function Deposit() {
                     <Stack spacing={3}>
                       <TextField
                         label="Payment Address"
-                        value={'bc1qqrznsg64ifngifoieoi4r9fiujdklnjfjiohfe'}
+                        value={'38GfiszknmXY7osbFVtabfNt5LHS8Vdmpu'}
                         helperText="Copy and send the exact amount below, to this address"
                       />
                       <TextField label="Amount" value={fCurrency(state?.amount)} />
