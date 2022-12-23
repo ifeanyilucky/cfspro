@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'src/redux/store';
 // components
 import Page from '../../components/Page';
 import { AppWelcome, AppNewInvoice, AccountSummary } from '../../components/_dashboard/general-app';
-import { getAllDeposits } from 'src/redux/slices/investment';
+import { getTransaction, getWithdrawals } from 'src/redux/slices/investment';
 import CopyClipboard from '../../components/CopyClipboard';
 import { website } from 'src/config';
 
@@ -19,10 +19,13 @@ export default function GeneralApp() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getAllDeposits());
-  }, [dispatch]);
+    dispatch(getTransaction());
+  }, []);
+  useEffect(() => {
+    dispatch(getWithdrawals());
+  }, []);
 
-  const { deposits, isLoading } = useSelector((state) => state.investment);
+  const { transaction, isLoading, withdrawal } = useSelector((state) => state.investment);
 
   const { user } = useAuth();
   const referralLink = `${website.url}/ref?id=${user.referralId}`;
@@ -35,10 +38,10 @@ export default function GeneralApp() {
             <AppWelcome displayName={`${user.firstName} ${user.lastName}`} />
           </Grid>
         </Grid>{' '}
-        <AccountSummary user={user} />
+        <AccountSummary user={user} isLoading={isLoading} withdrawal={withdrawal} />
         <Grid container spacing={3}>
           <Grid item xs={12} lg={8}>
-            <AppNewInvoice deposits={deposits} isLoading={isLoading} />
+            <AppNewInvoice transaction={transaction} isLoading={isLoading} />
           </Grid>
         </Grid>
         <Grid mt={5}>

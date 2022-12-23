@@ -91,7 +91,7 @@ export function createInvestment(values, setSubmitting, navigate) {
   };
 }
 
-// get all deposits by customer
+// get all transaction by customer
 export function getTransaction() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
@@ -99,10 +99,12 @@ export function getTransaction() {
       const { data } = await api.fetchTransaction();
       dispatch(slice.actions.getTransactionSuccess(data.transactions));
     } catch (error) {
-      dispatch(slice.actions.hasError());
+      dispatch(slice.actions.hasError(error));
     }
   };
 }
+
+// get all deposits by customer
 export function getAllDeposits() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
@@ -110,7 +112,19 @@ export function getAllDeposits() {
       const { data } = await api.getAllDeposits();
       dispatch(slice.actions.getDepositsSuccess(data.deposits));
     } catch (error) {
-      dispatch(slice.actions.hasError());
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+// get all customer's investment
+export function getAllInvestments() {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const { data } = await api.fetchInvestments();
+      dispatch(slice.actions.getInvestmentsSuccess(data.investment));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
     }
   };
 }
@@ -146,8 +160,8 @@ export function requestWithdrawal(payload, setSubmitting, navigate) {
 export function getWithdrawals() {
   return async (dispatch) => {
     try {
-      const response = api.getWithdrawals();
-      dispatch(slice.actions.getWithdrawalSuccess(response.data.withdrawals));
+      const { data } = await api.getWithdrawals();
+      dispatch(slice.actions.getWithdrawalSuccess(data.withdrawals));
     } catch (error) {
       dispatch(slice.actions.hasError());
     }

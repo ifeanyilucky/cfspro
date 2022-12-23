@@ -47,14 +47,14 @@ export default function Deposit() {
       .get(`https://api.coinconvert.net/convert/usd/btc?amount=1`)
       .then(({ data }) => {
         console.log(data);
-        const btc = state.amount * data.USD;
+        const btc = data.USD;
         setEquivalentAmount(btc);
         console.log(equivalentAmount);
       })
       .catch((error) => {
         console.log(error);
       });
-  });
+  }, [equivalentAmount]);
 
   const formik = useFormik({
     initialValues: {

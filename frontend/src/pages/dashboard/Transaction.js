@@ -44,7 +44,7 @@ import {
   ProductListToolbar,
   ProductMoreMenu
 } from '../../components/_dashboard/e-commerce/product-list';
-import { getAllDeposits, getTransaction } from 'src/redux/slices/investment';
+import { getTransaction } from 'src/redux/slices/investment';
 
 // ----------------------------------------------------------------------
 
@@ -143,8 +143,6 @@ export default function Transaction() {
           ]}
         />
         <Card>
-          <ProductListToolbar numSelected={selected.length} filterName={filterName} />
-
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
               <Table>

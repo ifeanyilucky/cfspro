@@ -2,14 +2,8 @@ import { Icon } from '@iconify/react';
 import { useRef, useState } from 'react';
 import { sentenceCase } from 'change-case';
 import { Link as RouterLink } from 'react-router-dom';
-import shareFill from '@iconify/icons-eva/share-fill';
-import printerFill from '@iconify/icons-eva/printer-fill';
-import archiveFill from '@iconify/icons-eva/archive-fill';
-import downloadFill from '@iconify/icons-eva/download-fill';
-import trash2Outline from '@iconify/icons-eva/trash-2-outline';
-import moreVerticalFill from '@iconify/icons-eva/more-vertical-fill';
-// material
-import { useTheme } from '@mui/material/styles';
+import arrowUp from '@iconify/icons-eva/diagonal-arrow-right-up-fill';
+import arrowDown from '@iconify/icons-eva/diagonal-arrow-left-down-fill';
 import arrowIosForwardFill from '@iconify/icons-eva/arrow-ios-forward-fill';
 import {
   Box,
@@ -41,8 +35,7 @@ import { fToNow } from 'src/utils/formatTime';
 
 // ----------------------------------------------------------------------
 
-export default function AppNewInvoice({ deposits, isLoading }) {
-  const transaction = deposits;
+export default function AppNewInvoice({ transaction, isLoading }) {
   if (isLoading) {
     return 'Loading...';
   }
@@ -67,7 +60,7 @@ export default function AppNewInvoice({ deposits, isLoading }) {
                   return (
                     <TableRow key={row?._id}>
                       <TableCell>{row?.amount && fCurrency(row?.amount)}</TableCell>
-                      <TableCell>{row?.method && row?.method}</TableCell>
+                      <TableCell>{row?.remark && row?.remark}</TableCell>
                       <TableCell>{row?.createdAt && fToNow(row?.createdAt)}</TableCell>
                       <TableCell>
                         {row?.status && (
@@ -83,7 +76,18 @@ export default function AppNewInvoice({ deposits, isLoading }) {
                           </Label>
                         )}
                       </TableCell>
-                      <TableCell align="right">{/* <MoreMenuButton /> */}</TableCell>
+                      <TableCell align="left">
+                        {row?.transactionType === 'in' ? (
+                          <Box
+                            component={Icon}
+                            sx={{ color: 'green', fontSize: '24px' }}
+                            color="success"
+                            icon={arrowDown}
+                          />
+                        ) : (
+                          <Box sx={{ color: 'red', fontSize: '24px' }} component={Icon} size="40px" icon={arrowUp} />
+                        )}
+                      </TableCell>
                     </TableRow>
                   );
                 })

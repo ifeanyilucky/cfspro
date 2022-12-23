@@ -39,7 +39,7 @@ const sidebarConfig =
       { title: 'Withdraw', path: PATH_DASHBOARD.withdraw, icon: ICONS.ecommerce },
       // { title: 'Profit History', path: PATH_DASHBOARD.ecommerce, icon: ICONS.ecommerce },
       { title: 'My plan', path: PATH_DASHBOARD.myPlan, icon: ICONS.booking },
-      { title: 'Trading plans', path: PATH_DASHBOARD.buyPlan, icon: ICONS.booking },
+      { title: 'Trading plans', path: PATH_DASHBOARD.plans, icon: ICONS.booking },
       { title: 'Transactions', path: PATH_DASHBOARD.transaction, icon: ICONS.ecommerce },
       { title: 'Referrals', path: PATH_DASHBOARD.referrals, icon: ICONS.booking }
     ]

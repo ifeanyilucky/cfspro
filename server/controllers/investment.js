@@ -31,7 +31,9 @@ const createInvestment = async (req, res) => {
 
 // GET INVESTMENTS
 const getInvestments = async (req, res) => {
-  const investment = await investSchema.find({ user: req.user._id });
+  const investment = await investSchema
+    .find({ user: req.user._id })
+    .sort({ createdAt: -1 });
   res.status(StatusCodes.OK).json({ investment });
 };
 

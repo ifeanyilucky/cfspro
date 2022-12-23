@@ -1,7 +1,9 @@
 import PropTypes from 'prop-types';
+import { useEffect } from 'react';
 import { Container, Alert, AlertTitle } from '@mui/material';
 import useAuth from 'src/hooks/useAuth';
-
+import { Navigate, useNavigate } from 'react-router-dom';
+import { PATH_ADMIN } from '../routes/paths';
 // ----------------------------------------------------------------------
 
 RoleBasedGuard.propTypes = {
@@ -18,6 +20,12 @@ const useCurrentRole = () => {
 
 export default function RoleBasedGuard({ accessibleRoles, children }) {
   const currentRole = useCurrentRole();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (currentRole === 'admin') {
+      return navigate(PATH_ADMIN.overview, { replace: true });
+    }
+  }, []);
 
   if (!accessibleRoles.includes(currentRole)) {
     return (

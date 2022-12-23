@@ -11,6 +11,7 @@ import {
   MenuItem,
   TextField
 } from '@mui/material';
+import { useEffect } from 'react';
 import { styled } from '@mui/material/styles';
 import { useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { useFormik, FormikProvider, Form } from 'formik';
@@ -34,7 +35,13 @@ export default function BuyPlan() {
   const { user } = useAuth();
   const dispatch = useDispatch();
   const { state } = useLocation();
-  const { plan } = state;
+  const { isLoading } = useSelector((state) => state.investment);
+  useEffect(() => {
+    if (!state) {
+      return navigate(PATH_DASHBOARD.plans, { replace: true });
+    }
+  }, []);
+
   const ISchema = Yup.object().shape({
     amount: Yup.number()
       .required()
@@ -46,7 +53,7 @@ export default function BuyPlan() {
     initialValues: {
       amount: '',
 
-      plan: state.plan
+      plan: state?.plan
     },
     validationSchema: ISchema,
     onSubmit: (values, { setSubmitting }) => {
@@ -54,12 +61,10 @@ export default function BuyPlan() {
       dispatch(createInvestment(values, setSubmitting, navigate));
     }
   });
+
   const { errors, getFieldProps, handleSubmit, values, touched, setFieldValue } = formik;
   const quickPrices = [100, 250, 500, 1000, 1500];
-  const { isLoading } = useSelector((state) => state.investment);
-  if (!state) {
-    return <Navigate to={PATH_DASHBOARD.plans} replace />;
-  }
+
   console.log(state);
   return (
     <Container>
@@ -130,7 +135,7 @@ export default function BuyPlan() {
                       sx={{ typography: 'body2', color: 'text.secondary' }}
                     >
                       <Typography variant="body2">Name of plan</Typography> &mdash;
-                      <Typography variant="subtitle1">{plan.name}</Typography>
+                      <Typography variant="subtitle1">{state?.plan.name}</Typography>
                     </Stack>
                     <Stack
                       component="li"
@@ -141,7 +146,7 @@ export default function BuyPlan() {
                       sx={{ typography: 'body2', color: 'text.secondary' }}
                     >
                       <Typography variant="body2">Plan duration</Typography> &mdash;
-                      <Typography variant="subtitle1">{fCurrency(plan.maxDeposit)}</Typography>
+                      <Typography variant="subtitle1">{fCurrency(state?.plan.maxDeposit)}</Typography>
                     </Stack>
                     <Stack
                       component="li"
@@ -152,7 +157,7 @@ export default function BuyPlan() {
                       sx={{ typography: 'body2', color: 'text.secondary' }}
                     >
                       <Typography variant="body2">Daily profit %</Typography> &mdash;
-                      <Typography variant="subtitle1">{fPercent(plan.dailyInterest)}</Typography>
+                      <Typography variant="subtitle1">{fPercent(state?.plan.dailyInterest)}</Typography>
                     </Stack>
                     <Stack
                       component="li"
@@ -163,7 +168,7 @@ export default function BuyPlan() {
                       sx={{ typography: 'body2', color: 'text.secondary' }}
                     >
                       <Typography variant="body2">Total Return %</Typography> &mdash;
-                      <Typography variant="subtitle1">{fPercent(plan.totalReturn)}</Typography>
+                      <Typography variant="subtitle1">{fPercent(state?.plan.totalReturn)}</Typography>
                     </Stack>
                   </Stack>
                   <Divider />

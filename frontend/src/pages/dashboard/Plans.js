@@ -99,7 +99,7 @@ export default function Plan() {
       />
       <Grid container spacing={3}>
         {plans.map((plan) => (
-          <Grid item key={plan.name} sm={12} md={4}>
+          <Grid item key={plan.name} xs={12} sm={6} md={4}>
             <CardStyle textAlign="center">
               <Typography variant="h4">{plan.name}</Typography>
               <Typography textAlign="center" variant="body2" sx={{ color: 'text.secondary' }}>

@@ -11,6 +11,11 @@ const investment = new mongoose.Schema(
       type: String,
       required: true,
     },
+    interest: {
+      type: String,
+      default: 0,
+    },
+
     plan: {
       type: Object,
     },

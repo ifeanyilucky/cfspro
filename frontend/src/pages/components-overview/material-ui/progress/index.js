@@ -54,7 +54,7 @@ export default function ProgressComponent() {
         setBuffer(progress + diff + diff2);
       }
     };
-  });
+  }, [progress]);
 
   useEffect(() => {
     const timer = setInterval(() => {
