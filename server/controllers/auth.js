@@ -40,6 +40,24 @@ const login = async (req, res) => {
   res.status(StatusCodes.OK).json({ success: true, user: loginUser, token });
 };
 
+// change password
+const changePassword = async (req, res) => {
+  const { oldPassword, newPassword } = req.body;
+
+  const account = await user.findOne({ _id: req.user._id });
+
+  const isPasswordCorrect = await account.comparePassword(oldPassword);
+  if (!isPasswordCorrect) {
+    throw new UnAuthError(`Sorry, that password isn't right`);
+  }
+  const updatePassword = await user.findOneAndUpdate(
+    { _id: account._id },
+    { password: newPassword },
+    { new: true }
+  );
+  res.status(StatusCodes.ACCEPTED).json({ success: true });
+};
+
 // get account information
 const account = async (req, res) => {
   const { id } = req.params;
@@ -133,4 +151,5 @@ module.exports = {
   updateAccount,
   resetPasswordRequest,
   resetPassword,
+  changePassword,
 };

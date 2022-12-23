@@ -15,6 +15,7 @@ export const loginUser = (values) => axiosInstance.post('/login', values);
 export const registerUser = (values) => axiosInstance.post('/register', values);
 export const resetPasswordRequest = (email) => axiosInstance.post('/reset-password-request', email);
 export const resetPassword = (password, token) => axiosInstance.patch(`/reset-password/${token}`, password);
+export const changePassword = (values) => axiosInstance.patch('/account/change-password', values);
 // -----------------------------------------------------------------------------
 
 export const getAccount = (userId) => axiosInstance.get(`/account/${userId}`);
