@@ -1,8 +1,8 @@
 import { filter } from 'lodash';
 import { Icon } from '@iconify/react';
+import editIcon from '@iconify/icons-eva/edit-2-fill';
 import { sentenceCase } from 'change-case';
 import { useState, useEffect } from 'react';
-import plusFill from '@iconify/icons-eva/plus-fill';
 import { Link as RouterLink } from 'react-router-dom';
 // material
 import { useTheme } from '@mui/material/styles';
@@ -19,11 +19,14 @@ import {
   Container,
   Typography,
   TableContainer,
-  TablePagination
+  TablePagination,
+  IconButton,
+  TextField
 } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getUserList, removeUser } from '../../redux/slices/user';
+import { getUserList, removeUser, updateUser } from '../../redux/slices/user';
 // routes
 import { PATH_DASHBOARD, PATH_ADMIN } from '../../routes/paths';
 // hooks
@@ -36,6 +39,7 @@ import SearchNotFound from '../../components/SearchNotFound';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 import { UserListHead, UserListToolbar, UserMoreMenu } from '../../components/_dashboard/user/list';
 import { fCurrency } from 'src/utils/formatNumber';
+import EditUserDialog from 'src/components/_dashboard/admin/edit-user';
 
 // ----------------------------------------------------------------------
 
@@ -45,6 +49,7 @@ const TABLE_HEAD = [
   { id: 'email', label: 'Email', alignRight: false },
   { id: 'balance', label: 'Balance', alignRight: false },
   { id: 'Profit', label: 'Profit', alignRight: false },
+  { id: 'ReferralBonus', label: 'Referral Bonus', alignRight: false },
   { id: '' }
 ];
 
@@ -123,6 +128,27 @@ export default function UserList() {
   const filteredUsers = applySortFilter(userList, getComparator(order, orderBy), filterName);
 
   const isUserNotFound = filteredUsers.length === 0;
+  // user dialog
+  const [currentUser, setCurrentUser] = useState(null);
+  const [userOpen, setUserOpen] = useState(false);
+
+  // edit cash
+  const [amount, setAmount] = useState({
+    totalProfit: 0,
+    referralBonus: 0,
+    accountBalance: 0
+  });
+  const [balanceEdit, setBalanceEdit] = useState(false);
+  const [profitEdit, setProfitEdit] = useState(false);
+  const [referralBonusEdit, setReferralBonusEdit] = useState(false);
+
+  const handleBalanceEdit = async (value) => {
+    // dispatch(updateUser(value));
+    console.log(value);
+    setProfitEdit(false);
+    setBalanceEdit(false);
+    setReferralBonusEdit(false);
+  };
 
   return (
     <Page title="User: List">
@@ -131,6 +157,7 @@ export default function UserList() {
           heading="User List"
           links={[{ name: 'Dashboard', href: PATH_ADMIN.root }, { name: 'List' }]}
         />
+        <EditUserDialog open={userOpen} setOpen={setUserOpen} user={currentUser} />
         <Card>
           <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
           <Scrollbar>
@@ -145,28 +172,103 @@ export default function UserList() {
                 />
                 <TableBody>
                   {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => {
-                    return (
-                      <TableRow hover key={row?._id} tabIndex={-1}>
-                        <TableCell padding="checkbox">{index}</TableCell>
-                        <TableCell component="th" scope="row" padding="none">
-                          <Stack direction="row" alignItems="center" spacing={2}>
-                            <Avatar>{row?.firstName}</Avatar>
-                            <Typography variant="subtitle2" noWrap>
-                              {row?.firstName && row?.firstName} {row?.lastName && row?.lastName}
-                            </Typography>
-                          </Stack>
-                        </TableCell>
-                        <TableCell align="left">{row?.email && row?.email}</TableCell>
-                        <TableCell align="left">{row?.accountBalance && fCurrency(row?.accountBalance)}</TableCell>
-                        <TableCell align="left">{row?.totalProfit && fCurrency(row?.totalProfit)}</TableCell>
-                        <TableCell align="right">
-                          <UserMoreMenu
-                            onDelete={() => handleDeleteUser(row?._id)}
-                            userName={row?.firstName && row?.lastName}
-                          />
-                        </TableCell>
-                      </TableRow>
-                    );
+                    if (row.role === 'customer') {
+                      return (
+                        <TableRow hover key={row?._id} tabIndex={-1}>
+                          <TableCell padding="checkbox">{index + 1}</TableCell>
+                          <TableCell component="th" scope="row" padding="none">
+                            <Stack direction="row" alignItems="center" spacing={2}>
+                              <Avatar>{row?.firstName}</Avatar>
+                              <Typography variant="subtitle2" noWrap>
+                                {row?.firstName && row?.firstName} {row?.lastName && row?.lastName}
+                              </Typography>
+                            </Stack>
+                          </TableCell>
+                          <TableCell align="left">{row?.email && row?.email}</TableCell>
+                          <TableCell align="left">
+                            {balanceEdit ? (
+                              <TextField
+                                sx={{ minWidth: '90px', maxWidth: '100px' }}
+                                label="Referral bonus"
+                                type="number"
+                                defaultValue={row?.accountBalance}
+                                onChange={(e) => setAmount({ accountBalance: e.target.value })}
+                              />
+                            ) : (
+                              <Typography variant="body1">
+                                {row?.accountBalance && fCurrency(row?.accountBalance)}
+                              </Typography>
+                            )}
+                            {balanceEdit ? (
+                              <LoadingButton
+                                onClick={() => handleBalanceEdit({ accountBalance: amount.accountBalance })}
+                              >
+                                Save
+                              </LoadingButton>
+                            ) : (
+                              <IconButton>
+                                <Icon icon={editIcon} onClick={() => setBalanceEdit(true)} />
+                              </IconButton>
+                            )}
+                          </TableCell>
+                          <TableCell align="left">
+                            {profitEdit ? (
+                              <TextField
+                                sx={{ minWidth: '90px', maxWidth: '100px' }}
+                                label="Referral bonus"
+                                type="number"
+                                defaultValue={row?.totalProfit}
+                                onChange={(e) => setAmount({ totalProfit: e.target.value })}
+                              />
+                            ) : (
+                              <Typography variant="body1">{row?.totalProfit && fCurrency(row?.totalProfit)}</Typography>
+                            )}
+                            {profitEdit ? (
+                              <LoadingButton onClick={() => handleBalanceEdit({ totalProfit: amount.totalProfit })}>
+                                Save
+                              </LoadingButton>
+                            ) : (
+                              <IconButton>
+                                <Icon icon={editIcon} onClick={() => setProfitEdit(true)} />
+                              </IconButton>
+                            )}
+                          </TableCell>
+                          <TableCell align="left">
+                            <Stack spacing={2} direction="row" alignItems="center">
+                              {referralBonusEdit ? (
+                                <TextField
+                                  sx={{ minWidth: '90px', maxWidth: '100px' }}
+                                  label="Referral bonus"
+                                  defaultValue={row?.referralBonus}
+                                  onChange={(e) => setAmount({ referralBonus: e.target.value })}
+                                />
+                              ) : (
+                                <Typography variant="body1">
+                                  {row?.referralBonus && fCurrency(row?.referralBonus)}
+                                </Typography>
+                              )}
+                              {balanceEdit ? (
+                                <LoadingButton>Save</LoadingButton>
+                              ) : (
+                                <IconButton>
+                                  <Icon icon={editIcon} onClick={() => setReferralBonusEdit(true)} />
+                                </IconButton>
+                              )}
+                            </Stack>
+                          </TableCell>
+                          <TableCell align="right">
+                            <UserMoreMenu
+                              handleEdit={() => {
+                                setUserOpen(true);
+                                setCurrentUser(row);
+                              }}
+                              onDelete={() => handleDeleteUser(row?._id)}
+                              userName={row?.firstName && row?.lastName}
+                            />
+                          </TableCell>
+                        </TableRow>
+                      );
+                    }
                   })}
                   {emptyRows > 0 && (
                     <TableRow style={{ height: 53 * emptyRows }}>

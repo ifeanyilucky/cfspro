@@ -84,27 +84,6 @@ function NavItem({ item, isShow }) {
   if (customer) {
     return (
       <>
-        {/* <ListItemStyle
-          onClick={handleOpen}
-          sx={{
-            ...(isActiveRoot && activeRootStyle)
-          }}
-        >
-          <ListItemIconStyle>{icon && icon}</ListItemIconStyle>
-
-          {isShow && (
-            <>
-              <ListItemText disableTypography primary={'title'} />
-             
-              <Box
-                component={Icon}
-                icon={open ? arrowIosDownwardFill : arrowIosForwardFill}
-                sx={{ width: 16, height: 16, ml: 1 }}
-              />
-            </>
-          )}
-        </ListItemStyle> */}
-
         <List component="div" disablePadding>
           {customer.map((item) => {
             const { title, path } = item;

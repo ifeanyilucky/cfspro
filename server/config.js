@@ -1,4 +1,5 @@
 const website = 'https://www.crestfinancepro.com';
+const host = 'https://app.crestfinancepro.com';
 const gmailConfig = {
   mailPassword: process.env.MAIL_PASSWORD,
   email: process.env.EMAIL,
@@ -10,4 +11,5 @@ const gmailConfig = {
 module.exports = {
   gmailConfig,
   website,
+  host,
 };

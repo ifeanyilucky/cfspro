@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Icon } from '@iconify/react';
 import { useSnackbar } from 'notistack';
 import { useFormik, Form, FormikProvider } from 'formik';
@@ -30,12 +30,15 @@ export default function RegisterForm() {
     password: Yup.string().required('Password is required')
   });
 
+  const referrerId = window.localStorage.getItem('referrerId');
+
   const formik = useFormik({
     initialValues: {
       firstName: '',
       lastName: '',
       email: '',
-      password: ''
+      password: '',
+      referrerId: referrerId || ''
     },
     validationSchema: RegisterSchema,
     onSubmit: async (values, { setErrors, setSubmitting }) => {
@@ -90,7 +93,7 @@ export default function RegisterForm() {
 
           <TextField
             fullWidth
-            autoComplete="username"
+            autoComplete="email"
             type="email"
             label="Email address"
             {...getFieldProps('email')}

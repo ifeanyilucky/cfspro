@@ -35,9 +35,9 @@ AuthLayout.propTypes = {
 export default function AuthLayout({ children }) {
   return (
     <HeaderStyle>
-      <RouterLink to="/">
+      <a href="https://crestfinancepro.com">
         <Logo />
-      </RouterLink>
+      </a>
 
       <MHidden width="smDown">
         <Typography

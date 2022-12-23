@@ -7,19 +7,10 @@ import useSettings from '../../hooks/useSettings';
 import { useDispatch, useSelector } from 'src/redux/store';
 // components
 import Page from '../../components/Page';
-import {
-  AppWelcome,
-  AppWidgets1,
-  AppWidgets2,
-  AppFeatured,
-  AppNewInvoice,
-  AppTotalDownloads,
-  AppTotalInstalled,
-  AppTotalActiveUsers,
-  AccountSummary
-} from '../../components/_dashboard/general-app';
+import { AppWelcome, AppNewInvoice, AccountSummary } from '../../components/_dashboard/general-app';
 import { getAllDeposits } from 'src/redux/slices/investment';
 import CopyClipboard from '../../components/CopyClipboard';
+import { website } from 'src/config';
 
 // ----------------------------------------------------------------------
 
@@ -34,7 +25,8 @@ export default function GeneralApp() {
   const { deposits, isLoading } = useSelector((state) => state.investment);
 
   const { user } = useAuth();
-  const referralLink = `https://crestfinancepro.com/ref=${user.referralId}`;
+  const referralLink = `${website.url}/ref?id=${user.referralId}`;
+
   return (
     <Page title="Dashboard">
       <Container maxWidth={themeStretch ? false : 'xl'}>

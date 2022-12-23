@@ -14,14 +14,15 @@ import {
   List,
   ListItem,
   ListItemText,
-  TextField
+  TextField,
+  CardHeader
 } from '@mui/material';
 import { useLocation, Navigate, useNavigate } from 'react-router';
 import { useFormik, FormikProvider, Form } from 'formik';
 import { Icon } from '@iconify/react';
 import closeFill from '@iconify/icons-eva/close-fill';
 import { useDispatch } from 'react-redux';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { fCurrency } from '../../utils/formatNumber';
 import { UploadSingleFile } from '../../components/upload';
 import { addDeposit } from '../../redux/slices/investment';
@@ -36,10 +37,24 @@ export default function Deposit() {
   const { state } = useLocation();
   const dispatch = useDispatch();
   const [fileHolder, setFileHolder] = useState(null);
+  const [equivalentAmount, setEquivalentAmount] = useState('');
   const isMountedRef = useIsMountedRef();
   const { closeSnackbar, enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const formData = new FormData();
+  useEffect(() => {
+    axios
+      .get(`https://api.coinconvert.net/convert/usd/btc?amount=1`)
+      .then(({ data }) => {
+        console.log(data);
+        const btc = state.amount * data.USD;
+        setEquivalentAmount(btc);
+        console.log(equivalentAmount);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  });
 
   const formik = useFormik({
     initialValues: {
@@ -55,7 +70,8 @@ export default function Deposit() {
       await axios
         .post('https://api.cloudinary.com/v1_1/dd3sg5fnj/image/upload', formData)
         .then(({ data }) => {
-          dispatch(addDeposit({ ...values, paymentProof: data.secure_url }));
+          dispatch(addDeposit({ ...values, paymentProof: data?.secure_url }));
+          console.log(values, data.secure_url);
           enqueueSnackbar('Account Fund Successful! Please wait for system to validate this transaction.', {
             variant: 'success',
             autoHideDuration: 7000,
@@ -106,20 +122,23 @@ export default function Deposit() {
             <Grid item xs={12} lg={8}>
               <Card>
                 <CardContent>
+                  <Typography variant="body1">
+                    You are to make payment of {fCurrency(state?.amount)} using your selected payment method.
+                  </Typography>
+
                   <Stack spacing={5}>
-                    <Stack spacing={2}>
-                      <Typography variant="body1">
-                        You are to make payment of {fCurrency(state?.amount)} using your selected payment method.
-                      </Typography>
+                    <Stack spacing={2} my={4}>
                       {state?.method === 'Bitcoin' ? <BitcoinIcon width="30%" /> : <USDTIcon width="30%" />}
                     </Stack>
-                    <Stack px={2}>
-                      <Typography variant="subtitle2">Steps</Typography>
-                      <ol>
-                        <li>Click the proceed button</li>
-                        <li>Input your desired amount from $200 and proceed with your payment</li>
-                        <li>Upload your payment and click "Upload Payment" botton to upload your deposit proof</li>
-                      </ol>
+
+                    <Stack spacing={3}>
+                      <TextField
+                        label="Payment Address"
+                        value={'bc1qqrznsg64ifngifoieoi4r9fiujdklnjfjiohfe'}
+                        helperText="Copy and send the exact amount below, to this address"
+                      />
+                      <TextField label="Amount" value={fCurrency(state?.amount)} />
+                      <TextField label="Bitcoin Equivalent" value={equivalentAmount} />
                     </Stack>
                     <Stack>
                       <Typography variant="body1"> Upload Payment proof after payment.</Typography>

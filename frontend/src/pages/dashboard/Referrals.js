@@ -4,10 +4,11 @@ import CopyClipboard from 'src/components/CopyClipboard';
 import { PATH_DASHBOARD } from 'src/routes/paths';
 import HeaderBreadcrumbs from 'src/components/HeaderBreadcrumbs';
 import Page from 'src/components/Page';
+import { website } from 'src/config';
 
 export default function Referrals() {
   const { user } = useAuth();
-  const referralLink = `https://dashboard.crestfinancepro.com/ref=${user.referralId}`;
+  const referralLink = `${website.url}/ref?id=${user.referralId}`;
   return (
     <Page title="Referral">
       <Container>

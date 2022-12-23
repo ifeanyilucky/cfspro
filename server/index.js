@@ -30,9 +30,16 @@ app.use(
 app.get('/welcome', function (req, res) {
   res.render('welcome');
 });
+app.get('/forgot-password', function (req, res) {
+  res.render('forgotPassword', {
+    email: 'wfguru2017@gmail.com',
+    resetUrl: 'https://localhost:3000/admin',
+  });
+});
 app.use('/api', authRouter);
 app.use('/api', investmentRouter);
 app.use('/api/static', staticRouter);
+const config = {};
 app.get('/api/static', (req, res) => {
   res.send('<h1>Crestfinance Pro API</h1>');
 });

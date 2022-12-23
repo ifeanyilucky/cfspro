@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const withdrawal = new mongoose.Schema(
+const investment = new mongoose.Schema(
   {
     user: {
       type: mongoose.Types.ObjectId,
@@ -11,28 +11,29 @@ const withdrawal = new mongoose.Schema(
       type: String,
       required: true,
     },
-    method: {
+    plan: {
+      type: Object,
+    },
+
+    transactionType: {
       type: String,
+      enum: ['out', 'in'],
+      default: 'out',
     },
     status: {
       type: String,
       enum: ['completed', 'failed', 'pending'],
       default: 'pending',
     },
-    transactionType: {
-      type: String,
-      enum: ['out', 'in'],
-      default: 'out',
-    },
     transactionId: {
       type: String,
     },
     remark: {
       type: String,
-      default: 'withdrawal of',
+      default: 'bought investment plan',
     },
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model('withdrawal', withdrawal);
+module.exports = mongoose.model('investment', investment);

@@ -86,7 +86,7 @@ function applySortFilter(array, comparator, query) {
 
 // ----------------------------------------------------------------------
 
-export default function Investment() {
+export default function WithdrawalRequest() {
   const { themeStretch } = useSettings();
   const theme = useTheme();
   const dispatch = useDispatch();
@@ -100,10 +100,17 @@ export default function Investment() {
   useEffect(() => {
     dispatch(getStaticDeposits());
   }, [dispatch]);
-  const state = useSelector((state) => state.investment);
-  console.log(state);
-  const investments = [];
-
+  const { deposits, withdrawal } = useSelector((state) => state.investment);
+  console.log(deposits);
+  const transactions = [...deposits, ...withdrawal].map((deposit) => {
+    return {
+      _id: deposit._id,
+      method: deposit.method,
+      status: deposit.status,
+      createdAt: deposit.createdAt,
+      amount: deposit.amount
+    };
+  });
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
@@ -112,7 +119,7 @@ export default function Investment() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = investments.map((n) => n._id);
+      const newSelecteds = transactions.map((n) => n._id);
       setSelected(newSelecteds);
       return;
     }
@@ -127,9 +134,9 @@ export default function Investment() {
     setRowsPerPage(parseInt(e.target.value, 10));
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - investments.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - transactions.length) : 0;
 
-  const filteredTransaction = applySortFilter(investments, getComparator(order, orderBy), filterName);
+  const filteredTransaction = applySortFilter(transactions, getComparator(order, orderBy), filterName);
 
   const isProductNotFound = filteredTransaction.length === 0;
   const [depositOpen, setDepositOpen] = useState(false);
@@ -157,7 +164,7 @@ export default function Investment() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={investments.length}
+                  rowCount={transactions.length}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
@@ -246,7 +253,7 @@ export default function Investment() {
           <TablePagination
             rowsPerPageOptions={[]}
             component="div"
-            count={investments.length}
+            count={transactions.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onRowsPerPageChange={handleChangeRowsPerPage}

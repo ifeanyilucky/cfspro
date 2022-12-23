@@ -1,13 +1,39 @@
 const depositSchema = require('../models/deposit');
 const WM = require('../models/withdrawalMethod');
+const investSchema = require('../models/investment');
+const userSchema = require('../models/user');
 const { NotFoundError, BadRequestError } = require('../errors');
 const { StatusCodes } = require('http-status-codes');
 const { totp, authenticator } = require('otplib');
 const withdraw = require('../models/withdrawal');
 const sendEmail = require('../utils/sendEmail');
 const shortId = require('shortid');
+const ejs = require('ejs');
+const path = require('path');
+
 // CREATE INVESTMENT CONTROLLER
-const invest = async (req, res) => {};
+const createInvestment = async (req, res) => {
+  const { amount } = req.body;
+  const transactionId = shortId.generate();
+  const invest = await investSchema.create({
+    ...req.body,
+    user: req.user._id,
+    transactionId: transactionId,
+    status: 'completed',
+  });
+  const user = await userSchema.findOneAndUpdate(
+    { _id: invest.user },
+    { $inc: { accountBalance: -amount } },
+    { new: true }
+  );
+  res.status(StatusCodes.CREATED).json({ investment: invest, user: user });
+};
+
+// GET INVESTMENTS
+const getInvestments = async (req, res) => {
+  const investment = await investSchema.find({ user: req.user._id });
+  res.status(StatusCodes.OK).json({ investment });
+};
 
 // DEPOSIT CONTROLLERS
 const deposit = async (req, res) => {
@@ -47,14 +73,14 @@ const requestWithdrawalOtp = async (req, res) => {
 const requestWithdrawal = async (req, res) => {
   const { otp } = req.body;
   console.log(req.body);
+  const transactionId = shortId.generate();
 
-  const isValidOtp = totp.check(otp, secret);
-  console.log(isValidOtp);
-  // if (isValidOtp === false) {
-  //   throw new BadRequestError('OTP is not valid');
-  // }
-  // const _withdraw = await withdraw.create({ ...req.body, user: req.user._id });
-  // res.status(StatusCodes.CREATED).JSON({ withdrawal: _withdraw });
+  const _withdraw = await withdraw.create({
+    ...req.body,
+    user: req.user._id,
+    transactionId: transactionId,
+  });
+  res.status(StatusCodes.CREATED).json({ withdrawal: _withdraw });
 };
 
 const getWithdrawals = async (req, res) => {
@@ -77,22 +103,31 @@ const getWithdrawalMethod = async (req, res) => {
 };
 
 const getTransaction = async (req, res) => {
-  const transaction = [];
   const deposits = await depositSchema.find({ user: req.user._id }).sort({
     createdAt: -1,
   });
   const withdrawals = await withdraw.find({ user: req.user._id }).sort({
     createdAt: -1,
   });
-  res.status(StatusCodes.OK).json({ withdrawals });
+  const investments = await investSchema
+    .find({ user: req.user._id })
+    .sort({ createdAt: -1 });
+  const transactions = [...deposits, ...withdrawals, ...investments];
+  const sortedTransaction = transactions
+    .slice()
+    .sort((a, b) => b.createdAt - a.createdAt);
+  res.status(StatusCodes.OK).json({ transactions: sortedTransaction });
 };
+
 module.exports = {
   deposit,
-  invest,
+  createInvestment,
+  getInvestments,
   requestWithdrawalOtp,
   requestWithdrawal,
   createWithdrawalMethod,
   getWithdrawalMethod,
   getWithdrawals,
   getDeposits,
+  getTransaction,
 };

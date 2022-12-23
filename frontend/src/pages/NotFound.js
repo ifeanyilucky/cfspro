@@ -4,6 +4,8 @@ import { styled } from '@mui/material/styles';
 import { Button, Typography, Container, Box } from '@mui/material';
 // components
 import Page from '../components/Page';
+import useAuth from 'src/hooks/useAuth';
+import { PATH_ADMIN } from 'src/routes/paths';
 
 // ----------------------------------------------------------------------
 
@@ -20,6 +22,7 @@ const ContentStyle = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function NotFound() {
+  const { user } = useAuth();
   return (
     <Page title="404 Page Not Found">
       <Container>
@@ -33,7 +36,12 @@ export default function NotFound() {
             spelling.
           </Typography>
 
-          <Button to="/" size="large" variant="contained" component={RouterLink}>
+          <Button
+            to={user.role === 'admin' ? PATH_ADMIN.root : '/'}
+            size="large"
+            variant="contained"
+            component={RouterLink}
+          >
             Go to Home
           </Button>
         </ContentStyle>

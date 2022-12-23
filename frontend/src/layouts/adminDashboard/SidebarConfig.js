@@ -32,17 +32,14 @@ const sidebarConfig =
     customer: [
       {
         title: 'Overview',
-        path: PATH_ADMIN.overview,
-        icon: ICONS.dashboard
+        path: PATH_ADMIN.overview
       },
-      { title: 'Deposit Request', path: PATH_ADMIN.depositRequest, icon: ICONS.ecommerce },
-      { title: 'Investments', path: PATH_ADMIN.investments, icon: ICONS.ecommerce },
-      { title: 'All user', path: PATH_ADMIN.allUser, icon: ICONS.ecommerce },
-      // { title: 'Profit History', path: PATH_DASHBOARD.ecommerce, icon: ICONS.ecommerce },
-      { title: 'My plan', path: PATH_DASHBOARD.myPlan, icon: ICONS.booking },
-      { title: 'Trading plans', path: PATH_DASHBOARD.buyPlan, icon: ICONS.booking },
-      { title: 'Transactions', path: PATH_DASHBOARD.transaction, icon: ICONS.ecommerce },
-      { title: 'Referrals', path: PATH_DASHBOARD.referrals, icon: ICONS.booking }
+      { title: 'Deposit Request', path: PATH_ADMIN.depositRequest },
+      { title: 'Investments', path: PATH_ADMIN.investments },
+      { title: 'Withdrawal Request', path: PATH_ADMIN.withdrawalRequest },
+      { title: 'All user', path: PATH_ADMIN.allUser },
+      { title: 'Send email', path: PATH_ADMIN.sendEmail },
+      { title: 'Commission', path: PATH_ADMIN.commission }
     ]
   };
 

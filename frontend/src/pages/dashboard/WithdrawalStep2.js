@@ -18,57 +18,61 @@ import { requestWithdrawal } from 'src/redux/slices/investment';
 
 import { LitecoinIcon, BitcoinIcon, USDTIcon } from '../../assets';
 import { FemaleSharp } from '@mui/icons-material';
+import useAuth from 'src/hooks/useAuth';
+import { fCurrency } from 'src/utils/formatNumber';
 
 export default function Withdraw() {
   const { state } = useLocation();
+  const { user } = useAuth();
   const { closeSnackbar, enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [otpLoading, setOtpLoading] = useState(false);
   const ValidSchema = Yup.object().shape({
-    amount: Yup.number().required().min(100, 'Minimum amount to deposit is $100'),
+    amount: Yup.number()
+      .required()
+      .min(100, 'Minimum amount to withdraw is $100')
+      .max(user?.accountBalance, `Your account balance is ${fCurrency(user?.accountBalance)}`),
     otp: Yup.string()
   });
   const formik = useFormik({
     initialValues: {
-      amount: '',
-      otp: ''
+      amount: ''
     },
     validationSchema: ValidSchema,
-    onSubmit: (values) => {
-      console.log(values);
-      dispatch(requestWithdrawal({ ...values, otp: `${values.otp}` }));
+    onSubmit: (values, { setSubmitting }) => {
+      dispatch(requestWithdrawal({ ...values }, setSubmitting, navigate));
     }
   });
   const { errors, getFieldProps, handleSubmit, values, touched } = formik;
 
-  const handleOTPRequest = async () => {
-    setOtpLoading(true);
-    try {
-      const { data } = await axios.get('/request-otp');
-      console.log(data);
-      enqueueSnackbar('OTP sent, check your mail', {
-        variant: 'success',
-        action: (key) => (
-          <MIconButton size="small" onClick={() => closeSnackbar(key)}>
-            <Icon icon={closeFill} />
-          </MIconButton>
-        )
-      });
-      setOtpLoading(false);
-    } catch (error) {
-      console.log(error.message);
-      setOtpLoading(false);
-      enqueueSnackbar('Something went wrong', {
-        variant: 'error',
-        action: (key) => (
-          <MIconButton size="small" onClick={() => closeSnackbar(key)}>
-            <Icon icon={closeFill} />
-          </MIconButton>
-        )
-      });
-    }
-  };
+  // const handleOTPRequest = async () => {
+  //   setOtpLoading(true);
+  //   try {
+  //     const { data } = await axios.get('/request-otp');
+  //     console.log(data);
+  //     enqueueSnackbar('OTP sent, check your mail', {
+  //       variant: 'success',
+  //       action: (key) => (
+  //         <MIconButton size="small" onClick={() => closeSnackbar(key)}>
+  //           <Icon icon={closeFill} />
+  //         </MIconButton>
+  //       )
+  //     });
+  //     setOtpLoading(false);
+  //   } catch (error) {
+  //     console.log(error.message);
+  //     setOtpLoading(false);
+  //     enqueueSnackbar('Something went wrong', {
+  //       variant: 'error',
+  //       action: (key) => (
+  //         <MIconButton size="small" onClick={() => closeSnackbar(key)}>
+  //           <Icon icon={closeFill} />
+  //         </MIconButton>
+  //       )
+  //     });
+  //   }
+  // };
 
   return (
     <Page title="Withdraw">
@@ -95,7 +99,7 @@ export default function Withdraw() {
                   }
                 }}
               >
-                <Chip label="Your payment method" variant="filled" />
+                <Chip label="Your withdrawal method" variant="filled" />
                 <Typography component={'span'} variant="caption">
                   {state.method}
                 </Typography>
@@ -111,12 +115,11 @@ export default function Withdraw() {
                     helperText={touched.amount && errors.amount}
                   />
                 </Stack>
-                <Box>
+                {/* <Box>
                   <LoadingButton loading={otpLoading} variant="contained" onClick={handleOTPRequest}>
                     Request OTP
                   </LoadingButton>
-                </Box>
-                <Stack>
+                </Box>  <Stack>
                   <TextField
                     fullWidth
                     type="number"
@@ -125,7 +128,7 @@ export default function Withdraw() {
                     error={Boolean(touched.otp && errors.otp)}
                     helperText={touched.otp ? errors.otp : 'OTP will be sent to your email when you request'}
                   />
-                </Stack>
+                </Stack> */}
                 <LoadingButton type="submit" variant="contained" size="large">
                   Complete request
                 </LoadingButton>

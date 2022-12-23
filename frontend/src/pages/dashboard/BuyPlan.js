@@ -4,30 +4,24 @@ import {
   CardContent,
   Container,
   Grid,
-  FormLabel,
-  RadioGroup,
-  FormControl,
-  FormControlLabel,
-  Radio,
   Stack,
   Button,
   Chip,
   Divider,
-  TextField,
-  Table,
-  TableContainer,
-  TableCell,
-  TableHead,
-  TableRow,
-  TableBody
+  MenuItem,
+  TextField
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { useNavigate } from 'react-router';
+import { useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { useFormik, FormikProvider, Form } from 'formik';
 import * as Yup from 'yup';
-import { fCurrency } from '../../utils/formatNumber';
+import { fCurrency, fPercent } from '../../utils/formatNumber';
 import { PATH_DASHBOARD } from '../../routes/paths';
 import useAuth from 'src/hooks/useAuth';
+import { useDispatch, useSelector } from 'src/redux/store';
+import { createInvestment } from 'src/redux/slices/investment';
+import { LoadingButton } from '@mui/lab';
+import HeaderBreadcrumbs from 'src/components/HeaderBreadcrumbs';
 
 const GridStyle = styled(Grid)(({ theme }) => ({
   [theme.breakpoints.down('sm')]: {
@@ -38,7 +32,10 @@ const GridStyle = styled(Grid)(({ theme }) => ({
 export default function BuyPlan() {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const DepositSchema = Yup.object().shape({
+  const dispatch = useDispatch();
+  const { state } = useLocation();
+  const { plan } = state;
+  const ISchema = Yup.object().shape({
     amount: Yup.number()
       .required()
       .min(100, 'Minimum investment about is $100')
@@ -48,18 +45,32 @@ export default function BuyPlan() {
   const formik = useFormik({
     initialValues: {
       amount: '',
-      method: 'USD'
+
+      plan: state.plan
     },
-    validationSchema: DepositSchema,
-    onSubmit: (values) => {
+    validationSchema: ISchema,
+    onSubmit: (values, { setSubmitting }) => {
       console.log(values);
+      dispatch(createInvestment(values, setSubmitting, navigate));
     }
   });
   const { errors, getFieldProps, handleSubmit, values, touched, setFieldValue } = formik;
   const quickPrices = [100, 250, 500, 1000, 1500];
-
+  const { isLoading } = useSelector((state) => state.investment);
+  if (!state) {
+    return <Navigate to={PATH_DASHBOARD.plans} replace />;
+  }
+  console.log(state);
   return (
     <Container>
+      <HeaderBreadcrumbs
+        heading="Buy Plan"
+        links={[
+          { name: 'Dashboard', href: PATH_DASHBOARD.app },
+          { name: 'Plans', href: PATH_DASHBOARD.plans },
+          { name: 'Buy plan' }
+        ]}
+      />
       <FormikProvider value={formik}>
         <Form onSubmit={handleSubmit}>
           <Grid container spacing={3}>
@@ -108,73 +119,53 @@ export default function BuyPlan() {
             <Grid item xs={12} lg={4}>
               <Card>
                 <CardContent>
-                  <Grid container spacing={2} mb={1}>
-                    <Grid item sm={6}>
-                      <Stack spacing={1}>
-                        <Typography variant="body2">Name of plan</Typography>
-                        <Typography variant="caption" sx={{ color: 'Highlight' }}>
-                          Hedge Fund
-                        </Typography>
-                      </Stack>
-                    </Grid>
-                    <Grid item sm={6}>
-                      <Stack spacing={1}>
-                        <Typography variant="body2">Plan Price</Typography>
-                        <Typography variant="caption" sx={{ color: 'Highlight' }}>
-                          {fCurrency(values.amount)}
-                        </Typography>
-                      </Stack>
-                    </Grid>
-                    <Grid item sm={6}>
-                      <Stack spacing={1}>
-                        <Typography variant="body2">Duration</Typography>
-                        <Typography variant="caption" sx={{ color: 'Highlight' }}>
-                          1 Day
-                        </Typography>
-                      </Stack>
-                    </Grid>
-                    <Grid item sm={6}>
-                      <Stack spacing={1}>
-                        <Typography variant="body2">Profit</Typography>
-                        <Typography variant="caption" sx={{ color: 'Highlight' }}>
-                          1.2% Weekly
-                        </Typography>
-                      </Stack>
-                    </Grid>
-
-                    <Grid item sm={6}>
-                      <Stack spacing={1}>
-                        <Typography variant="body2">Minimum Deposit</Typography>
-                        <Typography variant="caption" sx={{ color: 'Highlight' }}>
-                          {fCurrency(1000)}
-                        </Typography>
-                      </Stack>
-                    </Grid>
-                    <Grid item sm={6}>
-                      <Stack spacing={1}>
-                        <Typography variant="body2">Maximum Deposit</Typography>
-                        <Typography variant="caption" sx={{ color: 'Highlight' }}>
-                          {fCurrency(50000)}
-                        </Typography>
-                      </Stack>
-                    </Grid>
-                    <Grid item sm={6}>
-                      <Stack spacing={1}>
-                        <Typography variant="body2">Minimum Return</Typography>
-                        <Typography variant="caption" sx={{ color: 'Highlight' }}>
-                          12%
-                        </Typography>
-                      </Stack>
-                    </Grid>
-                    <Grid item sm={6}>
-                      <Stack spacing={1}>
-                        <Typography variant="body2">Maximum Return Return</Typography>
-                        <Typography variant="caption" sx={{ color: 'Highlight' }}>
-                          13.75%
-                        </Typography>
-                      </Stack>
-                    </Grid>
-                  </Grid>
+                  <Typography variant="body1">You investment details</Typography>
+                  <Stack component="ul" spacing={2} sx={{ my: 5, width: 1 }}>
+                    <Stack
+                      component="li"
+                      direction="row"
+                      alignItems="center"
+                      spacing={1.5}
+                      justifyContent="space-between"
+                      sx={{ typography: 'body2', color: 'text.secondary' }}
+                    >
+                      <Typography variant="body2">Name of plan</Typography> &mdash;
+                      <Typography variant="subtitle1">{plan.name}</Typography>
+                    </Stack>
+                    <Stack
+                      component="li"
+                      direction="row"
+                      alignItems="center"
+                      justifyContent="space-between"
+                      spacing={1.5}
+                      sx={{ typography: 'body2', color: 'text.secondary' }}
+                    >
+                      <Typography variant="body2">Plan duration</Typography> &mdash;
+                      <Typography variant="subtitle1">{fCurrency(plan.maxDeposit)}</Typography>
+                    </Stack>
+                    <Stack
+                      component="li"
+                      direction="row"
+                      alignItems="center"
+                      justifyContent="space-between"
+                      spacing={1.5}
+                      sx={{ typography: 'body2', color: 'text.secondary' }}
+                    >
+                      <Typography variant="body2">Daily profit %</Typography> &mdash;
+                      <Typography variant="subtitle1">{fPercent(plan.dailyInterest)}</Typography>
+                    </Stack>
+                    <Stack
+                      component="li"
+                      direction="row"
+                      alignItems="center"
+                      justifyContent="space-between"
+                      spacing={1.5}
+                      sx={{ typography: 'body2', color: 'text.secondary' }}
+                    >
+                      <Typography variant="body2">Total Return %</Typography> &mdash;
+                      <Typography variant="subtitle1">{fPercent(plan.totalReturn)}</Typography>
+                    </Stack>
+                  </Stack>
                   <Divider />
                   <Grid container spacing={2} my={1}>
                     <Grid item>
@@ -187,9 +178,9 @@ export default function BuyPlan() {
                     </Grid>
                   </Grid>
                   <Stack>
-                    <Button size="large" type="submit" variant="contained">
+                    <LoadingButton loading={isLoading} size="large" type="submit" variant="contained">
                       Confirm & Invest
-                    </Button>
+                    </LoadingButton>
                   </Stack>
                 </CardContent>
               </Card>

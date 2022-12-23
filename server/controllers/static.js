@@ -5,13 +5,23 @@ const { StatusCodes } = require('http-status-codes');
 const { totp } = require('otplib');
 const withdraw = require('../models/withdrawal');
 const userSchema = require('../models/user');
+const investSchema = require('../models/investment');
+const referralBonus = require('../models/referralBonus');
+const sendEmail = require('../utils/sendEmail');
+const ejs = require('ejs');
+const path = require('path');
 
+const getInvestments = async (req, res) => {
+  const investments = await investSchema.find();
+  res.status(StatusCodes.OK).json({ investments });
+};
 const getDeposits = async (req, res) => {
-  const deposits = await depositSchema.find().sort({
+  const deposits = await depositSchema.find({ status: 'pending' }).sort({
     createdAt: -1,
   });
   res.status(StatusCodes.OK).json({ deposits });
 };
+
 // EDIT DEPOSITS
 const updateDeposit = async (req, res) => {
   const { id } = req.params;
@@ -44,19 +54,30 @@ const getWithdrawals = async (req, res) => {
   res.status(StatusCodes.OK).json({ withdrawals });
 };
 
+// PROCESS WITHDRAWAL
+
 // EDIT WITHDRAWAL
 const updateWithdrawal = async (req, res) => {
   const { id } = req.params;
-  const deposit = await withdraw.findOneAndUpdate(
+  const { amount } = req.body;
+  const withdrawal = await withdraw.findOneAndUpdate(
     { _id: id },
     { ...req.body },
     { new: true }
   );
-  res.status(StatusCodes.ACCEPTED).json({ deposit });
-};
 
+  const user = await userSchema.findOneAndUpdate(
+    { _id: withdrawal.user },
+    { $inc: { accountBalance: -amount } },
+    { new: true }
+  );
+
+  res.status(StatusCodes.ACCEPTED).json({ withdrawal });
+};
+// GET USERS
 const getUsers = async (req, res) => {
-  const users = await userSchema.find({});
+  const users = await userSchema.find({ role: 'customer' });
+
   res.status(StatusCodes.OK).json({ users });
 };
 
@@ -76,6 +97,37 @@ const deleteUser = async (req, res) => {
   const user = await userSchema.findOneAndDelete({ _id: id });
   res.status(StatusCodes.ACCEPTED).json({ user });
 };
+
+const sendEmailToCustomer = async (req, res) => {
+  const { subject, email, message } = req.body;
+  ejs.renderFile(
+    path.join(__dirname, '../views/customer-email'),
+    { config: '', title: subject },
+    async (err, data) => {
+      if (err) {
+        console.log(err);
+      } else {
+        await sendEmail({
+          to: email,
+          subject: req.body.subject,
+          html: data,
+        });
+      }
+    }
+  );
+
+  res.status(StatusCodes.OK).json({ success: true });
+};
+
+const getReferralBonus = async (req, res) => {
+  const bonus = await referralBonus
+    .find({})
+    .populate('bonusFrom', 'firstName lastName')
+    .populate('user')
+    .sort({ createdAt: -1 });
+  res.status(StatusCodes.OK).json({ referralBonus: bonus });
+};
+
 module.exports = {
   getWithdrawals,
   getDeposits,
@@ -84,4 +136,7 @@ module.exports = {
   getUsers,
   updateUser,
   deleteUser,
+  sendEmailToCustomer,
+  getReferralBonus,
+  getInvestments,
 };

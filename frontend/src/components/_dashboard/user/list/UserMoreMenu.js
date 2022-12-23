@@ -18,7 +18,7 @@ UserMoreMenu.propTypes = {
   userName: PropTypes.string
 };
 
-export default function UserMoreMenu({ onDelete, userName }) {
+export default function UserMoreMenu({ onDelete, userName, handleEdit }) {
   const ref = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -45,11 +45,7 @@ export default function UserMoreMenu({ onDelete, userName }) {
           <ListItemText primary="Delete" primaryTypographyProps={{ variant: 'body2' }} />
         </MenuItem>
 
-        <MenuItem
-          component={RouterLink}
-          to={`${PATH_DASHBOARD.app}/${paramCase(userName)}/edit`}
-          sx={{ color: 'text.secondary' }}
-        >
+        <MenuItem onClick={handleEdit} sx={{ color: 'text.secondary' }}>
           <ListItemIcon>
             <Icon icon={editFill} width={24} height={24} />
           </ListItemIcon>

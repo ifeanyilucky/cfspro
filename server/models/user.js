@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 
 const UserSchema = new mongoose.Schema(
@@ -23,6 +24,9 @@ const UserSchema = new mongoose.Schema(
     referralId: {
       type: String,
       required: [true, 'Please automate referral ID'],
+    },
+    referrerId: {
+      type: String,
     },
     accountBalance: {
       type: Number,
@@ -67,6 +71,8 @@ const UserSchema = new mongoose.Schema(
       enum: ['customer', 'admin'],
       default: 'customer',
     },
+    passwordResetToken: String,
+    passwordResetExpire: Date,
   },
   { timestamps: true }
 );
@@ -75,6 +81,12 @@ UserSchema.pre('save', async function (next) {
   if (!this.isModified('password')) {
     next();
   }
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+  next();
+});
+
+UserSchema.pre('update', async function (next) {
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
   next();
@@ -91,5 +103,16 @@ UserSchema.methods.createJWT = function () {
 UserSchema.methods.comparePassword = async function (enteredPassword) {
   const isMatch = await bcrypt.compare(enteredPassword, this.password);
   return isMatch;
+};
+
+UserSchema.methods.resetPasswordToken = function () {
+  const resetToken = crypto.randomBytes(20).toString('hex');
+
+  this.passwordResetToken = crypto
+    .createHash('sha256')
+    .update(resetToken)
+    .digest('hex');
+  this.passwordResetExpire = Date.now() + 10 * (10000 * 60);
+  return resetToken;
 };
 module.exports = mongoose.model('user', UserSchema);

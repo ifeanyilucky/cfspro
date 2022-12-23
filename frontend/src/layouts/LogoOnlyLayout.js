@@ -24,9 +24,9 @@ export default function LogoOnlyLayout() {
   return (
     <>
       <HeaderStyle>
-        <RouterLink to="/">
+        <a href="https://crestfinancepro.com">
           <Logo />
-        </RouterLink>
+        </a>
       </HeaderStyle>
       <Outlet />
     </>

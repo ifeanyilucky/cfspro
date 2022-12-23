@@ -7,41 +7,30 @@ import { fNumber } from '../../../utils/formatNumber';
 
 // ----------------------------------------------------------------------
 
-const CHART_SIZE = { width: 106, height: 106 };
-
-const TOTAL_CHECK_IN = 38566;
-const TOTAL_CHECK_OUT = 18472;
-const CHART_DATA_CHECK_IN = [72];
-const CHART_DATA_CHECK_OUT = [64];
-
-export default function BookingCheckInWidgets() {
+export default function BookingCheckInWidgets({ totalUsers, totalInvestments }) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   return (
     <Card>
-      <Stack
-        direction={{ xs: 'column', sm: 'row' }}
-        divider={<Divider orientation={isMobile ? 'horizontal' : 'vertical'} flexItem />}
-      >
+      <Stack direction="row" divider={<Divider orientation={isMobile ? 'horizontal' : 'vertical'} flexItem />}>
         <Stack direction="row" alignItems="center" justifyContent="center" spacing={3} sx={{ width: 1, py: 5 }}>
           <div>
             <Typography variant="h4" sx={{ mb: 0.5 }}>
-              {fNumber(TOTAL_CHECK_IN)}
+              {fNumber(totalUsers)}
             </Typography>
             <Typography variant="body2" sx={{ opacity: 0.72 }}>
-              Check In
+              Registered users
             </Typography>
           </div>
         </Stack>
-
         <Stack direction="row" alignItems="center" justifyContent="center" spacing={3} sx={{ width: 1, py: 5 }}>
           <div>
             <Typography variant="h4" sx={{ mb: 0.5 }}>
-              {fNumber(TOTAL_CHECK_OUT)}
+              {fNumber(totalInvestments)}
             </Typography>
             <Typography variant="body2" sx={{ opacity: 0.72 }}>
-              Check Out
+              Total Investments
             </Typography>
           </div>
         </Stack>

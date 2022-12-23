@@ -28,6 +28,15 @@ const DepositSchema = new mongoose.Schema(
     transactionId: {
       type: String,
     },
+    transactionType: {
+      type: String,
+      enum: ['out', 'in'],
+      default: 'in',
+    },
+    remark: {
+      type: String,
+      default: 'deposited',
+    },
   },
   { timestamps: true }
 );

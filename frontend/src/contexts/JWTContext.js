@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 // utils
 import axios from '../utils/axios';
+import * as api from '../utils/axios';
 import { isValidToken, setSession } from '../utils/jwt';
 import { useSnackbar } from 'notistack';
 import { MIconButton } from '../components/@material-extend';
@@ -152,7 +153,15 @@ function AuthProvider({ children }) {
     dispatch({ type: 'LOGOUT' });
   };
 
-  const resetPassword = () => {};
+  const resetPassword = async (password, token) => {
+    const { data } = await api.resetPassword(password, token);
+    console.log(data);
+  };
+
+  const resetPasswordRequest = async (value) => {
+    const { data } = await api.resetPasswordRequest(value);
+    console.log(data);
+  };
 
   const updateProfile = async (payload) => {
     const response = await axios.patch('/account/update', payload);
@@ -172,6 +181,7 @@ function AuthProvider({ children }) {
         logout,
         register,
         resetPassword,
+        resetPasswordRequest,
         updateProfile
       }}
     >

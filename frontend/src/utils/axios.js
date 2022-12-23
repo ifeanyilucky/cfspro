@@ -10,9 +10,13 @@ axiosInstance.interceptors.request.use((req) => {
   }
   return req;
 });
-
+// AUTHENTICATION
 export const loginUser = (values) => axiosInstance.post('/login', values);
 export const registerUser = (values) => axiosInstance.post('/register', values);
+export const resetPasswordRequest = (email) => axiosInstance.post('/reset-password-request', email);
+export const resetPassword = (password, token) => axiosInstance.patch(`/reset-password/${token}`, password);
+// -----------------------------------------------------------------------------
+
 export const getAccount = (userId) => axiosInstance.get(`/account/${userId}`);
 export const deposit = (payload) => axiosInstance.post('/deposits', payload);
 export const getAllDeposits = () => axiosInstance.get('/deposits');
@@ -20,13 +24,15 @@ export const getWithdrawalMethod = () => axiosInstance.get('/withdrawal-method')
 export const requestWithdrawalOTP = () => axiosInstance.get('/request-otp');
 export const createWithdrawals = (payload) => axiosInstance.post('/withdrawal-method', payload);
 export const updateAccount = (payload) => axiosInstance.patch('/account/update', payload);
-
+export const newInvestment = (values) => axiosInstance.post('/investments/new', { ...values });
+export const fetchInvestments = () => axiosInstance.get('/investments');
 export const getWithdrawals = () => axiosInstance.get('/withdrawals');
 export const requestWithdrawal = (payload) => axiosInstance.post('/request-withdrawal', payload);
-
+export const fetchTransaction = () => axiosInstance.get('/transaction');
 // ADMIN REQUESTS
 export const getStaticDeposits = () => axiosInstance.get('/static/deposits');
 export const getStaticWithrawal = () => axiosInstance.get('/static/withdrawals');
+export const getStaticInvestments = () => axiosInstance.get('/static/investments');
 export const updateDeposit = (values, id) => axiosInstance.patch(`/static/update-deposit/${id}`, values);
 export const updateWithdrawal = (values, id) => axiosInstance.patch(`/static/update-withdrawal/${id}`, values);
 export const getUserList = () => axiosInstance.get('/static/users');

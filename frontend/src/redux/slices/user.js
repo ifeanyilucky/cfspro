@@ -56,9 +56,14 @@ const slice = createSlice({
       state.users = action.payload;
     },
 
+    // UPDATE USERS
+    updateUser(state, action) {
+      const updateUser = filter(state.userList, (user) => user._id !== action.payload);
+      state.userList = { ...updateUser, ...action.payload };
+    },
     // DELETE USERS
     deleteUser(state, action) {
-      const deleteUser = filter(state.userList, (user) => user._id !== action.payload);
+      const deleteUser = filter(state.userList, (user) => user._id !== action.payload._id);
       state.userList = deleteUser;
     },
 
@@ -168,6 +173,7 @@ export const updateUser = (payload, userId) => async (dispatch) => {
   dispatch(slice.actions.startLoading());
   try {
     const { data } = await api.editUser(payload, userId);
+    dispatch(slice.actions.updateUser(data.user));
   } catch (error) {
     dispatch(slice.actions.hasError(error));
   }

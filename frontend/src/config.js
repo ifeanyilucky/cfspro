@@ -8,7 +8,9 @@ export const firebaseConfig = {
   appId: process.env.REACT_APP_FIREBASE_APPID,
   measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID
 };
-
+export const website = {
+  url: process.env.REACT_APP_HOST
+};
 export const cognitoConfig = {
   userPoolId: process.env.REACT_APP_AWS_COGNITO_USER_POOL_ID,
   clientId: process.env.REACT_APP_AWS_COGNITO_CLIENT_ID

@@ -22,9 +22,9 @@ import {
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { deleteProduct } from '../../redux/slices/product';
+import { getProducts, deleteProduct } from '../../redux/slices/product';
 // utils
-import { fDate, fToNow, fDateTime } from '../../utils/formatTime';
+import { fDate, fDateTime } from '../../utils/formatTime';
 import { fCurrency } from '../../utils/formatNumber';
 // routes
 import { PATH_ADMIN, PATH_DASHBOARD } from '../../routes/paths';
@@ -41,19 +41,25 @@ import {
   ProductListToolbar,
   ProductMoreMenu
 } from '../../components/_dashboard/e-commerce/product-list';
-import { getStaticDeposits } from 'src/redux/slices/investment';
-import DepositDetail from 'src/components/_dashboard/admin/depost-detail';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'dateCreated', label: 'Date', alignRight: false },
-  { id: 'trxId', label: 'Transaction ID', alignRight: false },
-  { id: 'amount', label: 'Amount', alignRight: false },
-  { id: 'paymentMode', label: 'Payment mode', alignRight: false },
-  { id: 'status', label: 'Status', alignRight: true },
-  { id: 'action', label: 'Action', alignRight: true }
+  { id: 'name', label: 'name', alignRight: false },
+  { id: 'bonusFrom', label: 'Bonus From', alignRight: false },
+  { id: 'Amount', label: 'Amount', alignRight: false },
+  { id: 'Remarks', label: 'Remarks', alignRight: true },
+  { id: 'Date', label: 'Date', alignRight: true },
+  { id: '' }
 ];
+
+const ThumbImgStyle = styled('img')(({ theme }) => ({
+  width: 64,
+  height: 64,
+  objectFit: 'cover',
+  margin: theme.spacing(0, 2),
+  borderRadius: theme.shape.borderRadiusSm
+}));
 
 // ----------------------------------------------------------------------
 
@@ -81,15 +87,20 @@ function applySortFilter(array, comparator, query) {
     return a[1] - b[1];
   });
 
+  if (query) {
+    return filter(array, (_product) => _product.name.toLowerCase().indexOf(query.toLowerCase()) !== -1);
+  }
+
   return stabilizedThis.map((el) => el[0]);
 }
 
 // ----------------------------------------------------------------------
 
-export default function Investment() {
+export default function Commission() {
   const { themeStretch } = useSettings();
   const theme = useTheme();
   const dispatch = useDispatch();
+  const products = [];
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
   const [selected, setSelected] = useState([]);
@@ -98,11 +109,8 @@ export default function Investment() {
   const [orderBy, setOrderBy] = useState('createdAt');
 
   useEffect(() => {
-    dispatch(getStaticDeposits());
+    dispatch(getProducts());
   }, [dispatch]);
-  const state = useSelector((state) => state.investment);
-  console.log(state);
-  const investments = [];
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -112,44 +120,62 @@ export default function Investment() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = investments.map((n) => n._id);
+      const newSelecteds = products.map((n) => n.name);
       setSelected(newSelecteds);
       return;
     }
     setSelected([]);
   };
 
+  const handleClick = (event, name) => {
+    const selectedIndex = selected.indexOf(name);
+    let newSelected = [];
+    if (selectedIndex === -1) {
+      newSelected = newSelected.concat(selected, name);
+    } else if (selectedIndex === 0) {
+      newSelected = newSelected.concat(selected.slice(1));
+    } else if (selectedIndex === selected.length - 1) {
+      newSelected = newSelected.concat(selected.slice(0, -1));
+    } else if (selectedIndex > 0) {
+      newSelected = newSelected.concat(selected.slice(0, selectedIndex), selected.slice(selectedIndex + 1));
+    }
+    setSelected(newSelected);
+  };
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
 
-  const handleChangeRowsPerPage = (e) => {
-    setRowsPerPage(parseInt(e.target.value, 10));
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - investments.length) : 0;
+  const handleFilterByName = (event) => {
+    setFilterName(event.target.value);
+  };
 
-  const filteredTransaction = applySortFilter(investments, getComparator(order, orderBy), filterName);
+  const handleDeleteProduct = (productId) => {
+    dispatch(deleteProduct(productId));
+  };
 
-  const isProductNotFound = filteredTransaction.length === 0;
-  const [depositOpen, setDepositOpen] = useState(false);
-  const [currentDeposit, setCurrentDeposit] = useState(null);
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - products.length) : 0;
 
-  const editUser = () => {};
+  const filteredProducts = applySortFilter(products, getComparator(order, orderBy), filterName);
+
+  const isProductNotFound = filteredProducts.length === 0;
+
   return (
-    <Page title="Account history">
+    <Page title="Commission">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading="Deposit Request"
-          links={[
-            { name: 'Dashboard', href: PATH_ADMIN.overview },
-            {
-              name: 'Deposit request'
-            }
-          ]}
+          heading="Commission"
+          links={[{ name: 'Dashboard', href: PATH_ADMIN.root }, { name: 'Commission' }]}
         />
-        <DepositDetail deposit={currentDeposit} setDepositOpen={setDepositOpen} depositOpen={depositOpen} />
+
         <Card>
+          <ProductListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
+
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
               <Table>
@@ -157,18 +183,26 @@ export default function Investment() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={investments.length}
+                  rowCount={products.length}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
-                  {filteredTransaction.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                  {filteredProducts.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                    const { id, name } = row;
+                    const isItemSelected = selected.indexOf(row?.name) !== -1;
+
                     return (
-                      <TableRow hover key={row?._id} tabIndex={-1}>
-                        <TableCell>{row?.createdAt && fDateTime(row?.createdAt)}</TableCell>
-                        <TableCell>{row?.transactionId && row?.transactionId}</TableCell>
-                        <TableCell padding="checkbox" component="th" scope="row">
+                      <TableRow
+                        hover
+                        key={row?._id}
+                        tabIndex={-1}
+                        role="checkbox"
+                        selected={isItemSelected}
+                        aria-checked={isItemSelected}
+                      >
+                        <TableCell component="th" scope="row" padding="none">
                           <Box
                             sx={{
                               py: 2,
@@ -177,47 +211,15 @@ export default function Investment() {
                             }}
                           >
                             <Typography variant="subtitle2" noWrap>
-                              {row?.amount && fCurrency(row?.amount)}
+                              {row?.user?.firstName} {row?.user?.lastName}
                             </Typography>
                           </Box>
                         </TableCell>
+                        <TableCell style={{ minWidth: 160 }}>{row?.bonusFrom?.firstName}</TableCell>
+                        <TableCell style={{ minWidth: 160 }}>{fCurrency(row?.AMOUNT)}</TableCell>
+                        <TableCell align="right">{fDateTime(row?.createdAt)}</TableCell>
                         <TableCell align="right">
-                          <Box
-                            sx={{
-                              py: 2,
-                              display: 'flex',
-                              alignItems: 'center'
-                            }}
-                          >
-                            <Typography variant="subtitle2" noWrap>
-                              {row?.method && row?.method}
-                            </Typography>
-                          </Box>
-                        </TableCell>
-                        <TableCell style={{ minWidth: 160 }}>
-                          {row?.status && (
-                            <Label
-                              variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-                              color={
-                                (row?.status === 'failed' && 'error') ||
-                                (row?.status === 'pending' && 'warning') ||
-                                'success'
-                              }
-                            >
-                              {sentenceCase(row?.status)}
-                            </Label>
-                          )}
-                        </TableCell>
-                        <TableCell>
-                          <Button
-                            variant="contained"
-                            onClick={() => {
-                              setCurrentDeposit(row);
-                              setDepositOpen(true);
-                            }}
-                          >
-                            View
-                          </Button>
+                          <ProductMoreMenu onDelete={() => handleDeleteProduct(row?._id)} productName={name} />
                         </TableCell>
                       </TableRow>
                     );
@@ -244,13 +246,13 @@ export default function Investment() {
           </Scrollbar>
 
           <TablePagination
-            rowsPerPageOptions={[]}
+            rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={investments.length}
+            count={products.length}
             rowsPerPage={rowsPerPage}
             page={page}
-            onRowsPerPageChange={handleChangeRowsPerPage}
             onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </Card>
       </Container>

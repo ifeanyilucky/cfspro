@@ -63,11 +63,13 @@ export default function Router() {
           )
         },
 
-        { path: 'reset-password', element: <ResetPassword /> },
+        { path: 'forgot-password', element: <ForgotPassword /> },
+        { path: 'reset-password/:token', element: <ResetPassword /> },
         { path: 'verify', element: <VerifyCode /> }
       ]
     },
 
+    { path: '/ref', element: <ReferralPage /> },
     // Dashboard Routes
     {
       path: '/',
@@ -90,6 +92,7 @@ export default function Router() {
         { path: 'account-setting', element: <UserAccount /> },
         { path: 'account-history', element: <Transaction /> },
         { path: 'referrals', element: <Referrals /> },
+        { path: 'plans', element: <Plans /> },
 
         {
           path: 'user',
@@ -118,7 +121,10 @@ export default function Router() {
         { element: <AdminOverview />, path: 'overview' },
         { element: <DepositRequest />, path: 'deposit-request' },
         { element: <UserList />, path: 'all-user' },
-        { element: <Investments />, path: 'investments' }
+        { element: <Investments />, path: 'investments' },
+        { element: <SendEmail />, path: 'send-email' },
+        { element: <Commission />, path: 'commission' },
+        { element: <WithdrawalRequest />, path: 'withdrawal-request' }
       ]
     },
 
@@ -130,11 +136,13 @@ export default function Router() {
 }
 
 // IMPORT COMPONENTS
+const ReferralPage = Loadable(lazy(() => import('../pages/ReferralPage')));
 
 // Authentication
 const Login = Loadable(lazy(() => import('../pages/authentication/Login')));
 const Register = Loadable(lazy(() => import('../pages/authentication/Register')));
-const ResetPassword = Loadable(lazy(() => import('../pages/authentication/ResetPassword')));
+const ForgotPassword = Loadable(lazy(() => import('../pages/authentication/ResetPassword')));
+const ResetPassword = Loadable(lazy(() => import('../pages/authentication/ResetPassword2')));
 const VerifyCode = Loadable(lazy(() => import('../pages/authentication/VerifyCode')));
 // Dashboard
 const GeneralApp = Loadable(lazy(() => import('../pages/dashboard/GeneralApp')));
@@ -147,12 +155,16 @@ const Withdraw = Loadable(lazy(() => import('../pages/dashboard/Withdraw')));
 const WithdrawalStep2 = Loadable(lazy(() => import('../pages/dashboard/WithdrawalStep2')));
 const Transaction = Loadable(lazy(() => import('../pages/dashboard/Transaction')));
 const Referrals = Loadable(lazy(() => import('../pages/dashboard/Referrals')));
+const Plans = Loadable(lazy(() => import('../pages/dashboard/Plans')));
 
 // ADMIN DASHBOARD
 const AdminOverview = Loadable(lazy(() => import('../pages/admin/Overview')));
 const DepositRequest = Loadable(lazy(() => import('../pages/admin/DepositRequest')));
-const UserList = Loadable(lazy(() => import('../pages/admin/UserList')));
 const Investments = Loadable(lazy(() => import('../pages/admin/Investments')));
+const SendEmail = Loadable(lazy(() => import('../pages/admin/SendEmail')));
+const UserList = Loadable(lazy(() => import('../pages/admin/UserList')));
+const Commission = Loadable(lazy(() => import('../pages/admin/Commission')));
+const WithdrawalRequest = Loadable(lazy(() => import('../pages/admin/WithdrawalRequest')));
 
 const NotFound = Loadable(lazy(() => import('../pages/NotFound')));
 

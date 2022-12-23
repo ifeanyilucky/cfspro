@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { PATH_DASHBOARD } from 'src/routes/paths';
 import * as api from '../../utils/axios';
 
 const initialState = {
@@ -9,7 +10,8 @@ const initialState = {
   withdrawalMethod: null,
   withdrawal: [],
   isLoading: false,
-  error: false
+  error: false,
+  transaction: []
 };
 
 const slice = createSlice({
@@ -30,6 +32,10 @@ const slice = createSlice({
       state.deposits = [...state.deposits, action.payload];
     },
 
+    getTransactionSuccess(state, action) {
+      state.isLoading = false;
+      state.transaction = action.payload;
+    },
     getDepositsSuccess(state, action) {
       state.isLoading = false;
       state.deposits = action.payload;
@@ -37,6 +43,10 @@ const slice = createSlice({
     getDepositSuccess(state, action) {
       state.isLoading = false;
       state.deposit = action.payload;
+    },
+    addInvestmentSuccess(state, action) {
+      state.isLoading = false;
+      state.investments = [...state.investments, action.payload];
     },
     getInvestmentsSuccess(state, action) {
       state.isLoading = false;
@@ -63,7 +73,36 @@ const slice = createSlice({
 
 export default slice.reducer;
 
+// -------------------------------------------------------------
+// CUSTOMER ACTIONS
+export function createInvestment(values, setSubmitting, navigate) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading);
+    setSubmitting(true);
+    try {
+      const { data } = await api.newInvestment(values);
+      dispatch(slice.actions.addInvestmentSuccess(data.investment));
+      navigate(PATH_DASHBOARD.transaction);
+      setSubmitting(false);
+    } catch (error) {
+      console.log(error);
+      setSubmitting(false);
+    }
+  };
+}
+
 // get all deposits by customer
+export function getTransaction() {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const { data } = await api.fetchTransaction();
+      dispatch(slice.actions.getTransactionSuccess(data.transactions));
+    } catch (error) {
+      dispatch(slice.actions.hasError());
+    }
+  };
+}
 export function getAllDeposits() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
@@ -88,13 +127,17 @@ export function getWithdrawalMethod() {
 }
 
 // request withdrawal by customer
-export function requestWithdrawal(payload) {
+export function requestWithdrawal(payload, setSubmitting, navigate) {
+  setSubmitting(true);
   return async (dispatch) => {
     try {
       const response = api.requestWithdrawal(payload);
       dispatch(slice.actions.requestWithdrawalSuccess(response.data.withdrawal));
+      setSubmitting(false);
+      navigate(PATH_DASHBOARD.transaction);
     } catch (error) {
       dispatch(slice.actions.hasError());
+      setSubmitting(false);
     }
   };
 }
@@ -135,6 +178,7 @@ export const addDeposit = (payload) => async (dispatch) => {
   }
 };
 
+// ------------------------------------------------------------
 // ADMIN ACTIONS
 export function getStaticDeposits() {
   return async (dispatch) => {
@@ -158,3 +202,5 @@ export const getStaticWithdrawals = (payload) => async (dispatch) => {
     console.log(error);
   }
 };
+
+// -----------------------------------

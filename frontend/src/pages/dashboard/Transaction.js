@@ -3,6 +3,8 @@ import { Icon } from '@iconify/react';
 import { sentenceCase } from 'change-case';
 import { useState, useEffect } from 'react';
 import plusFill from '@iconify/icons-eva/plus-fill';
+import arrowUp from '@iconify/icons-eva/diagonal-arrow-right-up-fill';
+import arrowDown from '@iconify/icons-eva/diagonal-arrow-left-down-fill';
 import { Link as RouterLink } from 'react-router-dom';
 // material
 import { useTheme, styled } from '@mui/material/styles';
@@ -12,6 +14,7 @@ import {
   Table,
   Button,
   TableRow,
+  Avatar,
   Checkbox,
   TableBody,
   TableCell,
@@ -24,7 +27,7 @@ import {
 import { useDispatch, useSelector } from '../../redux/store';
 import { getProducts, deleteProduct } from '../../redux/slices/product';
 // utils
-import { fDate, fToNow } from '../../utils/formatTime';
+import { fDate, fDateTime, fToNow } from '../../utils/formatTime';
 import { fCurrency } from '../../utils/formatNumber';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
@@ -41,13 +44,14 @@ import {
   ProductListToolbar,
   ProductMoreMenu
 } from '../../components/_dashboard/e-commerce/product-list';
-import { getAllDeposits } from 'src/redux/slices/investment';
+import { getAllDeposits, getTransaction } from 'src/redux/slices/investment';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
+  { id: 'transactionId', label: 'Transaction ID', alignRight: false },
   { id: 'amount', label: 'Amount', alignRight: false },
-  { id: 'paymentMode', label: 'Payment mode', alignRight: false },
+  { id: 'remarks', label: 'Remarks', alignRight: false },
   { id: 'status', label: 'Status', alignRight: false },
   { id: 'dateCreated', label: 'Date', alignRight: true },
   { id: '' }
@@ -86,29 +90,21 @@ function applySortFilter(array, comparator, query) {
 
 export default function Transaction() {
   const { themeStretch } = useSettings();
-  const theme = useTheme();
+
   const dispatch = useDispatch();
-  const products = [];
+
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
   const [selected, setSelected] = useState([]);
   const [filterName, setFilterName] = useState('');
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [orderBy, setOrderBy] = useState('createdAt');
 
   useEffect(() => {
-    dispatch(getAllDeposits());
+    dispatch(getTransaction());
   }, [dispatch]);
-  const { deposits, withdrawal } = useSelector((state) => state.investment);
-  const transactions = [...deposits, ...withdrawal].map((deposit) => {
-    return {
-      _id: deposit._id,
-      method: deposit.method,
-      status: deposit.status,
-      createdAt: deposit.createdAt,
-      amount: deposit.amount
-    };
-  });
+  const { transaction } = useSelector((state) => state.investment);
+
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
@@ -117,7 +113,7 @@ export default function Transaction() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = transactions.map((n) => n._id);
+      const newSelecteds = transaction.map((n) => n._id);
       setSelected(newSelecteds);
       return;
     }
@@ -128,12 +124,12 @@ export default function Transaction() {
     setPage(newPage);
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - transactions.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - transaction.length) : 0;
 
-  const filteredTransaction = applySortFilter(transactions, getComparator(order, orderBy), filterName);
+  const filteredTransaction = applySortFilter(transaction, getComparator(order, orderBy), filterName);
 
   const isProductNotFound = filteredTransaction.length === 0;
-
+  console.log(transaction);
   return (
     <Page title="Account history">
       <Container maxWidth={themeStretch ? false : 'lg'}>
@@ -146,8 +142,9 @@ export default function Transaction() {
             }
           ]}
         />
-
         <Card>
+          <ProductListToolbar numSelected={selected.length} filterName={filterName} />
+
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
               <Table>
@@ -155,16 +152,16 @@ export default function Transaction() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={products.length}
+                  rowCount={transaction.length}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
-                  {filteredTransaction.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                  {transaction.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
                     return (
-                      <TableRow hover key={row?._id} tabIndex={-1}>
-                        <TableCell padding="checkbox" component="th" scope="row">
+                      <TableRow hover key={row?._id} tabIndex={-1} role="checkbox">
+                        <TableCell component="th" scope="row" padding="none">
                           <Box
                             sx={{
                               py: 2,
@@ -173,30 +170,26 @@ export default function Transaction() {
                             }}
                           >
                             <Typography variant="subtitle2" noWrap>
-                              {row?.amount && fCurrency(row?.amount)}
-                            </Typography>
-                          </Box>
-                        </TableCell>
-                        <TableCell align="right">
-                          <Box
-                            sx={{
-                              py: 2,
-                              display: 'flex',
-                              alignItems: 'center'
-                            }}
-                          >
-                            <Typography variant="subtitle2" noWrap>
-                              {row?.method && row?.method}
+                              {row?.transactionId}
                             </Typography>
                           </Box>
                         </TableCell>
                         <TableCell style={{ minWidth: 160 }}>
+                          <Typography variant="body1" color={row?.transactionType === 'in' ? 'green' : 'red'}>
+                            {row?.transactionType === 'in' ? '+' : '-'}
+                            {fCurrency(row?.amount)}
+                          </Typography>
+                        </TableCell>
+                        <TableCell style={{ minWidth: 160 }}>
+                          {row?.remark} - {fCurrency(row?.amount)}
+                        </TableCell>
+                        <TableCell style={{ minWidth: 160 }}>
                           {row?.status && (
                             <Label
-                              variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
+                              variant={'ghost'}
                               color={
-                                (row?.status === 'failed' && 'error') ||
                                 (row?.status === 'pending' && 'warning') ||
+                                (row?.status === 'failed' && 'error') ||
                                 'success'
                               }
                             >
@@ -204,7 +197,20 @@ export default function Transaction() {
                             </Label>
                           )}
                         </TableCell>
-                        <TableCell>{row?.createdAt && fToNow(row?.createdAt)}</TableCell>
+                        <TableCell align="right">{fDateTime(row?.createdAt)}</TableCell>
+
+                        <TableCell align="right">
+                          {row?.transactionType === 'in' ? (
+                            <Box
+                              component={Icon}
+                              sx={{ color: 'green', fontSize: '24px' }}
+                              color="success"
+                              icon={arrowDown}
+                            />
+                          ) : (
+                            <Box sx={{ color: 'red', fontSize: '24px' }} component={Icon} size="40px" icon={arrowUp} />
+                          )}
+                        </TableCell>
                       </TableRow>
                     );
                   })}
@@ -230,9 +236,9 @@ export default function Transaction() {
           </Scrollbar>
 
           <TablePagination
-            rowsPerPageOptions={[]}
+            rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={products.length}
+            count={transaction.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}

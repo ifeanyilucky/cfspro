@@ -14,7 +14,7 @@ export const PATH_AUTH = {
   root: ROOTS_AUTH,
   login: path(ROOTS_AUTH, '/login'),
   register: path(ROOTS_AUTH, '/register'),
-  resetPassword: path(ROOTS_AUTH, '/reset-password'),
+  resetPassword: path(ROOTS_AUTH, '/forgot-password'),
   verify: path(ROOTS_AUTH, '/verify')
 };
 
@@ -23,7 +23,10 @@ export const PATH_ADMIN = {
   overview: path(ROOT_ADMIN, '/overview'),
   depositRequest: path(ROOT_ADMIN, '/deposit-request'),
   allUser: path(ROOT_ADMIN, '/all-user'),
-  investments: path(ROOT_ADMIN, '/investments')
+  investments: path(ROOT_ADMIN, '/investments'),
+  sendEmail: path(ROOT_ADMIN, '/send-email'),
+  commission: path(ROOT_ADMIN, '/commission'),
+  withdrawalRequest: path(ROOT_ADMIN, '/withdrawal-request')
 };
 
 export const PATH_DASHBOARD = {
@@ -38,11 +41,7 @@ export const PATH_DASHBOARD = {
   transaction: path(ROOTS_DASHBOARD, 'account-history'),
   referrals: path(ROOTS_DASHBOARD, 'referrals'),
   accountSetting: path(ROOTS_DASHBOARD, 'account-setting'),
-
-  ecommerce: path(ROOTS_DASHBOARD, 'ecommerce'),
-  analytics: path(ROOTS_DASHBOARD, 'analytics'),
-  banking: path(ROOTS_DASHBOARD, 'banking'),
-  booking: path(ROOTS_DASHBOARD, 'booking')
+  plans: path(ROOTS_DASHBOARD, 'plans')
 };
 
 export const PATH_DOCS = 'https://docs-minimals.vercel.app/introduction';
