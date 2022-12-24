@@ -52,19 +52,19 @@ export default function EditUserDialog({ open, setOpen, user }) {
   const handleClose = () => {
     setOpen(false);
   };
-  let acctBalRef = React.useRef(null);
-  let totalProfitRef = React.useRef(null);
-  let refBonusRef = React.useRef(null);
+  const acctBalRef = React.useRef(null);
+  const totalProfitRef = React.useRef(null);
+  const refBonusRef = React.useRef(null);
 
-  acctBalRef.current.value = user?.accountBalance;
-  totalProfitRef.current.value = user?.totalProfit;
-  refBonusRef.current.value = user?.referralBonus;
+  // acctBalRef.current.value = user?.accountBalance;
+  // totalProfitRef.current.value = user?.totalProfit;
+  // refBonusRef.current.value = user?.referralBonus;
   console.log(refBonusRef);
   const formik = useFormik({
     initialValues: {
-      accountBalance: acctBalRef.current?.value,
-      totalProfit: totalProfitRef.current?.value,
-      referralBonus: refBonusRef.current?.value
+      accountBalance: '',
+      totalProfit: '',
+      referralBonus: ''
     },
     onSubmit: (values, { setSubmitting }) => {
       console.log(values);
@@ -72,7 +72,7 @@ export default function EditUserDialog({ open, setOpen, user }) {
     }
   });
   const { handleSubmit, errors, getFieldProps, touched, isSubmitting } = formik;
-  console.log(user);
+  console.log(acctBalRef, totalProfitRef, refBonusRef);
   return (
     <div>
       <BootstrapDialog onClose={handleClose} open={open}>
@@ -85,6 +85,7 @@ export default function EditUserDialog({ open, setOpen, user }) {
               <Stack spacing={3}>
                 <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
                   <TextField
+                    inputRef={acctBalRef}
                     fullWidth
                     label="Account Balance"
                     {...getFieldProps('accountBalance')}
@@ -94,6 +95,7 @@ export default function EditUserDialog({ open, setOpen, user }) {
                   />
 
                   <TextField
+                    inputRef={totalProfitRef}
                     fullWidth
                     label="Total Profit"
                     {...getFieldProps('totalProfit')}
@@ -103,6 +105,7 @@ export default function EditUserDialog({ open, setOpen, user }) {
                   />
                 </Stack>
                 <TextField
+                  inputRef={refBonusRef}
                   fullWidth
                   label="Referral Bonus"
                   {...getFieldProps('referralBonus')}

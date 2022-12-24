@@ -7,6 +7,7 @@ const ejs = require('ejs');
 const path = require('path');
 const config = require('../config');
 const crypto = require('crypto');
+const bcrypt = require('bcryptjs');
 
 // registration
 const register = async (req, res) => {
@@ -48,11 +49,15 @@ const changePassword = async (req, res) => {
 
   const isPasswordCorrect = await account.comparePassword(oldPassword);
   if (!isPasswordCorrect) {
-    throw new UnAuthError(`Sorry, that password isn't right`);
+    throw new UnAuthError(`Sorry, old password isn't right`);
   }
-  const updatePassword = await user.findOneAndUpdate(
+
+  const salt = await bcrypt.genSalt(10);
+  const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+  await user.findOneAndUpdate(
     { _id: account._id },
-    { password: newPassword },
+    { password: hashedPassword },
     { new: true }
   );
   res.status(StatusCodes.ACCEPTED).json({ success: true });
@@ -133,7 +138,7 @@ const resetPassword = async (req, res) => {
   if (!account) {
     throw new BadRequestError('Invalid reset token');
   }
-  const updatePassword = await user.findOneAndUpdate(
+  await user.findOneAndUpdate(
     { _id: account._id },
     {
       password: password,

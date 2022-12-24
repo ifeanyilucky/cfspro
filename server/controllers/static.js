@@ -12,14 +12,25 @@ const ejs = require('ejs');
 const path = require('path');
 
 const getInvestments = async (req, res) => {
-  const investments = await investSchema.find();
+  const investments = await investSchema
+    .find()
+    .populate('user')
+    .sort({ createdAt: -1 });
   res.status(StatusCodes.OK).json({ investments });
 };
 const getDeposits = async (req, res) => {
-  const deposits = await depositSchema.find({ status: 'pending' }).sort({
-    createdAt: -1,
-  });
+  const deposits = await depositSchema
+    .find({ status: 'pending' })
+    .populate('user')
+    .sort({ createdAt: -1 });
   res.status(StatusCodes.OK).json({ deposits });
+};
+
+// GET SINGLE DEPOSIT
+const getDeposit = async (req, res) => {
+  const { id } = req.params;
+  const deposit = await depositSchema.findOne({ _id: id }).populate('user');
+  res.status(StatusCodes.OK).json({ deposit });
 };
 
 // EDIT DEPOSITS
@@ -80,6 +91,12 @@ const getUsers = async (req, res) => {
 
   res.status(StatusCodes.OK).json({ users });
 };
+const getUser = async (req, res) => {
+  const { id } = req.params;
+  const user = await userSchema.findOne({ _id: id });
+
+  res.status(StatusCodes.OK).json({ user });
+};
 
 // UPDATE USER
 const updateUser = async (req, res) => {
@@ -139,4 +156,6 @@ module.exports = {
   sendEmailToCustomer,
   getReferralBonus,
   getInvestments,
+  getDeposit,
+  getUser,
 };

@@ -4,16 +4,20 @@ const {
   updateDeposit,
   updateWithdrawal,
   getUsers,
+  getUser,
   updateUser,
   deleteUser,
   getReferralBonus,
   getInvestments,
+  getDeposit,
 } = require('../controllers/static');
 const auth = require('../middlewares/authentication');
 const router = require('express').Router();
 
 router.route('/users').get(auth, getUsers);
+router.route('/users/:id').get(auth, getUser);
 router.route('/deposits').get(auth, getDeposits);
+router.route('/deposits/:id').get(auth, getDeposit);
 router.route('/update-deposit/:id').patch(auth, updateDeposit);
 router.route('/withdrawals').get(auth, getWithdrawals);
 router.route('/update-withdrawal/:id').patch(auth, updateWithdrawal);

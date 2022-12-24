@@ -142,7 +142,6 @@ export default function DepositRequest() {
   const [depositOpen, setDepositOpen] = useState(false);
   const [currentDeposit, setCurrentDeposit] = useState(null);
 
-  const editUser = () => {};
   return (
     <Page title="Account history">
       <Container maxWidth={themeStretch ? false : 'lg'}>
@@ -155,7 +154,7 @@ export default function DepositRequest() {
             }
           ]}
         />
-        <DepositDetail deposit={currentDeposit} setDepositOpen={setDepositOpen} depositOpen={depositOpen} />
+        {/* <DepositDetail deposit={currentDeposit} setDepositOpen={setDepositOpen} depositOpen={depositOpen} /> */}
         <Card>
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
@@ -216,13 +215,7 @@ export default function DepositRequest() {
                           )}
                         </TableCell>
                         <TableCell>
-                          <Button
-                            variant="contained"
-                            onClick={() => {
-                              setCurrentDeposit(row);
-                              setDepositOpen(true);
-                            }}
-                          >
+                          <Button as={RouterLink} variant="contained" to={`${PATH_ADMIN.depositRequest}/${row?._id}`}>
                             View
                           </Button>
                         </TableCell>

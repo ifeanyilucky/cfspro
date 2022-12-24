@@ -36,8 +36,7 @@ export default function UserAccount() {
   useEffect(() => {
     dispatch(getCards());
     dispatch(getAddressBook());
-    dispatch(getInvoices());
-    dispatch(getNotifications());
+
     dispatch(getProfile());
   }, [dispatch]);
 
@@ -51,11 +50,6 @@ export default function UserAccount() {
       value: 'Withdrawal',
       icon: <Icon icon={roundReceipt} width={20} height={20} />,
       component: <AccountBilling />
-    },
-    {
-      value: 'notifications',
-      icon: <Icon icon={bellFill} width={20} height={20} />,
-      component: <AccountNotifications />
     },
 
     {

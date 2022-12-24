@@ -120,6 +120,7 @@ export default function Router() {
         { element: <Navigate to="/admin/overview" replace /> },
         { element: <AdminOverview />, path: 'overview' },
         { element: <DepositRequest />, path: 'deposit-request' },
+        { element: <DepositRequestDetail />, path: 'deposit-request/:id' },
         { element: <UserList />, path: 'all-user' },
         { element: <Investments />, path: 'investments' },
         { element: <SendEmail />, path: 'send-email' },
@@ -165,6 +166,7 @@ const SendEmail = Loadable(lazy(() => import('../pages/admin/SendEmail')));
 const UserList = Loadable(lazy(() => import('../pages/admin/UserList')));
 const Commission = Loadable(lazy(() => import('../pages/admin/Commission')));
 const WithdrawalRequest = Loadable(lazy(() => import('../pages/admin/WithdrawalRequest')));
+const DepositRequestDetail = Loadable(lazy(() => import('../pages/admin/DepositRequestDetail')));
 
 const NotFound = Loadable(lazy(() => import('../pages/NotFound')));
 

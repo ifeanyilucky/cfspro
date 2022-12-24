@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { useEffect } from 'react';
 import { Container, Alert, AlertTitle } from '@mui/material';
 import useAuth from 'src/hooks/useAuth';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { PATH_ADMIN } from '../routes/paths';
 // ----------------------------------------------------------------------
 
@@ -21,9 +21,13 @@ const useCurrentRole = () => {
 export default function RoleBasedGuard({ accessibleRoles, children }) {
   const currentRole = useCurrentRole();
   const navigate = useNavigate();
+  const { pathname } = useLocation();
+
   useEffect(() => {
-    if (currentRole === 'admin') {
-      return navigate(PATH_ADMIN.overview, { replace: true });
+    if (!pathname.includes('admin')) {
+      if (currentRole === 'admin') {
+        return navigate(PATH_ADMIN.overview, { replace: true });
+      }
     }
   }, []);
 

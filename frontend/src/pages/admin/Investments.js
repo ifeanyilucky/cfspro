@@ -41,7 +41,7 @@ import {
   ProductListToolbar,
   ProductMoreMenu
 } from '../../components/_dashboard/e-commerce/product-list';
-import { getStaticDeposits } from 'src/redux/slices/investment';
+import { getStaticInvestments } from 'src/redux/slices/investment';
 import DepositDetail from 'src/components/_dashboard/admin/depost-detail';
 
 // ----------------------------------------------------------------------
@@ -49,9 +49,10 @@ import DepositDetail from 'src/components/_dashboard/admin/depost-detail';
 const TABLE_HEAD = [
   { id: 'dateCreated', label: 'Date', alignRight: false },
   { id: 'trxId', label: 'Transaction ID', alignRight: false },
+  { id: 'user', label: 'User', alignRight: false },
   { id: 'amount', label: 'Amount', alignRight: false },
-  { id: 'paymentMode', label: 'Payment mode', alignRight: false },
-  { id: 'status', label: 'Status', alignRight: true },
+  { id: 'remainingDays', label: 'Days left', alignRight: false },
+  { id: 'interest', label: 'Interest', alignRight: true },
   { id: 'action', label: 'Action', alignRight: true }
 ];
 
@@ -98,11 +99,10 @@ export default function Investment() {
   const [orderBy, setOrderBy] = useState('createdAt');
 
   useEffect(() => {
-    dispatch(getStaticDeposits());
+    dispatch(getStaticInvestments());
   }, [dispatch]);
-  const state = useSelector((state) => state.investment);
-  console.log(state);
-  const investments = [];
+  const { investments } = useSelector((state) => state.investment);
+  console.log(investments);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -129,26 +129,32 @@ export default function Investment() {
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - investments.length) : 0;
 
-  const filteredTransaction = applySortFilter(investments, getComparator(order, orderBy), filterName);
+  const filteredInvestments = applySortFilter(investments, getComparator(order, orderBy), filterName);
 
-  const isProductNotFound = filteredTransaction.length === 0;
-  const [depositOpen, setDepositOpen] = useState(false);
-  const [currentDeposit, setCurrentDeposit] = useState(null);
+  const isProductNotFound = filteredInvestments.length === 0;
 
-  const editUser = () => {};
+  const getNumberOfDays = (start, end) => {
+    const date1 = new Date(start);
+    const date2 = new Date(end);
+
+    const oneDay = 1000 * 60 * 60 * 60 * 24;
+    const diffInTime = date2.getTime() - date1.getTime();
+    const diffInDays = Math.round(diffInTime / oneDay);
+    return diffInDays;
+  };
+
   return (
     <Page title="Account history">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading="Deposit Request"
+          heading="User investments"
           links={[
             { name: 'Dashboard', href: PATH_ADMIN.overview },
             {
-              name: 'Deposit request'
+              name: 'User investments'
             }
           ]}
         />
-        <DepositDetail deposit={currentDeposit} setDepositOpen={setDepositOpen} depositOpen={depositOpen} />
         <Card>
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
@@ -163,11 +169,15 @@ export default function Investment() {
                   onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
-                  {filteredTransaction.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                  {filteredInvestments.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                    console.log(getNumberOfDays(row?.createdAt, row?.expiryDate));
                     return (
                       <TableRow hover key={row?._id} tabIndex={-1}>
                         <TableCell>{row?.createdAt && fDateTime(row?.createdAt)}</TableCell>
                         <TableCell>{row?.transactionId && row?.transactionId}</TableCell>
+                        <TableCell>
+                          {row?.user?.firstName} {row?.user?.lastName}
+                        </TableCell>
                         <TableCell padding="checkbox" component="th" scope="row">
                           <Box
                             sx={{
@@ -190,35 +200,12 @@ export default function Investment() {
                             }}
                           >
                             <Typography variant="subtitle2" noWrap>
-                              {row?.method && row?.method}
+                              {getNumberOfDays(row?.createdAt, row?.expiryDate)} days left
                             </Typography>
                           </Box>
                         </TableCell>
-                        <TableCell style={{ minWidth: 160 }}>
-                          {row?.status && (
-                            <Label
-                              variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-                              color={
-                                (row?.status === 'failed' && 'error') ||
-                                (row?.status === 'pending' && 'warning') ||
-                                'success'
-                              }
-                            >
-                              {sentenceCase(row?.status)}
-                            </Label>
-                          )}
-                        </TableCell>
-                        <TableCell>
-                          <Button
-                            variant="contained"
-                            onClick={() => {
-                              setCurrentDeposit(row);
-                              setDepositOpen(true);
-                            }}
-                          >
-                            View
-                          </Button>
-                        </TableCell>
+                        <TableCell>{row?.interest}</TableCell>
+                        <TableCell>more action</TableCell>
                       </TableRow>
                     );
                   })}

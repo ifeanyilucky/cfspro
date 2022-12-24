@@ -39,6 +39,8 @@ export const updateWithdrawal = (values, id) => axiosInstance.patch(`/static/upd
 export const getUserList = () => axiosInstance.get('/static/users');
 export const deleteUser = (id) => axiosInstance.delete(`/static/users/delete/${id}`);
 export const editUser = (payload, id) => axiosInstance.patch(`/users/edit/${id}`, { payload });
+export const fetchInvestment = (id) => axiosInstance.get(`/static/investments/${id}`);
+export const fetchDeposit = (id) => axiosInstance.get(`/static/deposits/${id}`);
 // axiosInstance.interceptors.response.use(
 //   (response) => response,
 //   (error) => {

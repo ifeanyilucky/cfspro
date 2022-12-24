@@ -6,6 +6,7 @@ import { Stack, Card, TextField } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // utils
 import fakeRequest from '../../../../utils/fakeRequest';
+import * as api from 'src/utils/axios';
 
 // ----------------------------------------------------------------------
 
@@ -26,10 +27,15 @@ export default function AccountChangePassword() {
     },
     validationSchema: ChangePassWordSchema,
     onSubmit: async (values, { setSubmitting }) => {
-      await fakeRequest(500);
-      setSubmitting(false);
-      alert(JSON.stringify(values, null, 2));
-      enqueueSnackbar('Save success', { variant: 'success' });
+      try {
+        const { data } = await api.changePassword(values);
+        console.log(data);
+        setSubmitting(false);
+        enqueueSnackbar('Save success', { variant: 'success' });
+      } catch (error) {
+        setSubmitting(false);
+        enqueueSnackbar(error.response.data.message, { variant: 'error' });
+      }
     }
   });
 

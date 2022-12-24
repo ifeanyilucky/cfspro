@@ -4,7 +4,7 @@ const investment = new mongoose.Schema(
   {
     user: {
       type: mongoose.Types.ObjectId,
-      ref: 'User',
+      ref: 'user',
       required: [true, 'User not provided'],
     },
     amount: {
@@ -29,6 +29,10 @@ const investment = new mongoose.Schema(
       type: String,
       enum: ['completed', 'failed', 'pending'],
       default: 'pending',
+    },
+    expiryDate: {
+      type: Date,
+      default: Date.now,
     },
     transactionId: {
       type: String,

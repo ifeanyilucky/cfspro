@@ -15,12 +15,21 @@ const path = require('path');
 const createInvestment = async (req, res) => {
   const { amount } = req.body;
   const transactionId = shortId.generate();
+  Date.prototype.addDays = function (days) {
+    const date = new Date(this.valueOf());
+    date.setDate(date.getDate() + days);
+    return date;
+  };
+  const date = new Date();
+  const expiryDate = date.addDays(90);
   const invest = await investSchema.create({
     ...req.body,
     user: req.user._id,
     transactionId: transactionId,
     status: 'completed',
+    expiryDate: expiryDate,
   });
+
   const user = await userSchema.findOneAndUpdate(
     { _id: invest.user },
     { $inc: { accountBalance: -amount } },
@@ -34,6 +43,13 @@ const getInvestments = async (req, res) => {
   const investment = await investSchema
     .find({ user: req.user._id })
     .sort({ createdAt: -1 });
+  res.status(StatusCodes.OK).json({ investment });
+};
+
+// GET SINGLE INVESTMENT
+const getInvestment = async (req, res) => {
+  const { id } = req.params;
+  const investment = await investSchema.findOne({ _id: id }).populate('user');
   res.status(StatusCodes.OK).json({ investment });
 };
 

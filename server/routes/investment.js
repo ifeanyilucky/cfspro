@@ -15,6 +15,7 @@ const auth = require('../middlewares/authentication');
 
 router.route('/investments/new').post(auth, createInvestment);
 router.route('/investments').get(auth, getInvestments);
+router.route('/investments/:id').get(auth, getInvestments);
 router.route('/deposits').post(auth, deposit);
 router.route('/deposits').get(auth, getDeposits);
 router.route('/withdrawals').get(auth, getWithdrawals);

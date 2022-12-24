@@ -128,6 +128,7 @@ export function getAllInvestments() {
     }
   };
 }
+
 export function getWithdrawalMethod() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
@@ -205,7 +206,18 @@ export function getStaticDeposits() {
     }
   };
 }
-
+// get single admin customer deposit detail
+export function getStaticDeposit(id) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const { data } = await api.fetchDeposit(id);
+      dispatch(slice.actions.getDepositSuccess(data.deposit));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+}
 export const getStaticWithdrawals = (payload) => async (dispatch) => {
   dispatch(slice.actions.startLoading);
   try {
@@ -217,4 +229,13 @@ export const getStaticWithdrawals = (payload) => async (dispatch) => {
   }
 };
 
+export const getStaticInvestments = () => async (dispatch) => {
+  dispatch(slice.actions.startLoading());
+  try {
+    const { data } = await api.getStaticInvestments();
+    dispatch(slice.actions.getInvestmentsSuccess(data.investments));
+  } catch (error) {
+    console.log(error);
+  }
+};
 // -----------------------------------
