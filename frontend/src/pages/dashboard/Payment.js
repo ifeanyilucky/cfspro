@@ -44,10 +44,10 @@ export default function Deposit() {
   const formData = new FormData();
   useEffect(() => {
     axios
-      .get(`https://api.coinconvert.net/convert/usd/btc?amount=1`)
+      .get(`https://blockchain.info/ticker`)
       .then(({ data }) => {
         console.log(data);
-        const btc = data.USD;
+        const btc = state?.amount / data?.USD?.buy;
         setEquivalentAmount(btc);
         console.log(equivalentAmount);
       })
