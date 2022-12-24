@@ -36,3 +36,8 @@
     transform: rotate(360deg);
   }
 }
+.whatsapp-icon{
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}

@@ -186,74 +186,18 @@ export default function UserList() {
                           </TableCell>
                           <TableCell align="left">{row?.email && row?.email}</TableCell>
                           <TableCell align="left">
-                            {balanceEdit ? (
-                              <TextField
-                                sx={{ minWidth: '90px', maxWidth: '100px' }}
-                                label="Referral bonus"
-                                type="number"
-                                defaultValue={row?.accountBalance}
-                                onChange={(e) => setAmount({ accountBalance: e.target.value })}
-                              />
-                            ) : (
-                              <Typography variant="body1">
-                                {row?.accountBalance && fCurrency(row?.accountBalance)}
-                              </Typography>
-                            )}
-                            {balanceEdit ? (
-                              <LoadingButton
-                                onClick={() => handleBalanceEdit({ accountBalance: amount.accountBalance })}
-                              >
-                                Save
-                              </LoadingButton>
-                            ) : (
-                              <IconButton>
-                                <Icon icon={editIcon} onClick={() => setBalanceEdit(true)} />
-                              </IconButton>
-                            )}
+                            <Typography variant="body1">
+                              {row?.accountBalance && fCurrency(row?.accountBalance)}
+                            </Typography>
                           </TableCell>
                           <TableCell align="left">
-                            {profitEdit ? (
-                              <TextField
-                                sx={{ minWidth: '90px', maxWidth: '100px' }}
-                                label="Referral bonus"
-                                type="number"
-                                defaultValue={row?.totalProfit}
-                                onChange={(e) => setAmount({ totalProfit: e.target.value })}
-                              />
-                            ) : (
-                              <Typography variant="body1">{row?.totalProfit && fCurrency(row?.totalProfit)}</Typography>
-                            )}
-                            {profitEdit ? (
-                              <LoadingButton onClick={() => handleBalanceEdit({ totalProfit: amount.totalProfit })}>
-                                Save
-                              </LoadingButton>
-                            ) : (
-                              <IconButton>
-                                <Icon icon={editIcon} onClick={() => setProfitEdit(true)} />
-                              </IconButton>
-                            )}
+                            <Typography variant="body1">{row?.totalProfit && fCurrency(row?.totalProfit)}</Typography>
                           </TableCell>
                           <TableCell align="left">
                             <Stack spacing={2} direction="row" alignItems="center">
-                              {referralBonusEdit ? (
-                                <TextField
-                                  sx={{ minWidth: '90px', maxWidth: '100px' }}
-                                  label="Referral bonus"
-                                  defaultValue={row?.referralBonus}
-                                  onChange={(e) => setAmount({ referralBonus: e.target.value })}
-                                />
-                              ) : (
-                                <Typography variant="body1">
-                                  {row?.referralBonus && fCurrency(row?.referralBonus)}
-                                </Typography>
-                              )}
-                              {balanceEdit ? (
-                                <LoadingButton>Save</LoadingButton>
-                              ) : (
-                                <IconButton>
-                                  <Icon icon={editIcon} onClick={() => setReferralBonusEdit(true)} />
-                                </IconButton>
-                              )}
+                              <Typography variant="body1">
+                                {row?.referralBonus && fCurrency(row?.referralBonus)}
+                              </Typography>
                             </Stack>
                           </TableCell>
                           <TableCell align="right">

@@ -14,8 +14,9 @@ const path = require('path');
 const getInvestments = async (req, res) => {
   const investments = await investSchema
     .find()
-    .populate('user')
-    .sort({ createdAt: -1 });
+
+    .sort({ createdAt: -1 })
+    .populate('user');
   res.status(StatusCodes.OK).json({ investments });
 };
 const getDeposits = async (req, res) => {

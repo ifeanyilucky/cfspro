@@ -19,7 +19,7 @@ const CardStyle = styled(Card)(({ theme }) => ({
     padding: theme.spacing(5)
   }
 }));
-export default function DepositRequestDetail() {
+export default function EditUser() {
   const { id } = useParams();
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);

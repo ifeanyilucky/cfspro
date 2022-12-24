@@ -19,3 +19,5 @@ export { default as PlanPremiumIcon } from './icon_plan_premium';
 export { default as USDTIcon } from './illustration_usdt';
 export { default as BitcoinIcon } from './illustration_bitcoin';
 export { default as LitecoinIcon } from './illustration_litecoin';
+
+export { default as WhatsappIcon } from './whatsappIcon';

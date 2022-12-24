@@ -42,7 +42,8 @@ const createInvestment = async (req, res) => {
 const getInvestments = async (req, res) => {
   const investment = await investSchema
     .find({ user: req.user._id })
-    .sort({ createdAt: -1 });
+    .sort({ createdAt: -1 })
+    .populate('user');
   res.status(StatusCodes.OK).json({ investment });
 };
 
@@ -64,9 +65,12 @@ const deposit = async (req, res) => {
   res.status(StatusCodes.CREATED).json({ deposit: newDeposit });
 };
 const getDeposits = async (req, res) => {
-  const deposits = await depositSchema.find({ user: req.user._id }).sort({
-    createdAt: -1,
-  });
+  const deposits = await depositSchema
+    .find({ user: req.user._id })
+    .sort({
+      createdAt: -1,
+    })
+    .populate('user');
   res.status(StatusCodes.OK).json({ deposits });
 };
 // ---------------------------------------------------------

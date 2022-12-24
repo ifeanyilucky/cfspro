@@ -42,12 +42,12 @@ import {
   ProductMoreMenu
 } from '../../components/_dashboard/e-commerce/product-list';
 import { getStaticDeposits } from 'src/redux/slices/investment';
-import DepositDetail from 'src/components/_dashboard/admin/depost-detail';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
   { id: 'dateCreated', label: 'Date', alignRight: false },
+  { id: 'user', label: 'User', alignRight: false },
   { id: 'trxId', label: 'Transaction ID', alignRight: false },
   { id: 'amount', label: 'Amount', alignRight: false },
   { id: 'paymentMode', label: 'Payment mode', alignRight: false },
@@ -139,8 +139,6 @@ export default function DepositRequest() {
   const filteredTransaction = applySortFilter(transactions, getComparator(order, orderBy), filterName);
 
   const isProductNotFound = filteredTransaction.length === 0;
-  const [depositOpen, setDepositOpen] = useState(false);
-  const [currentDeposit, setCurrentDeposit] = useState(null);
 
   return (
     <Page title="Account history">
@@ -173,6 +171,7 @@ export default function DepositRequest() {
                     return (
                       <TableRow hover key={row?._id} tabIndex={-1}>
                         <TableCell>{row?.createdAt && fDateTime(row?.createdAt)}</TableCell>
+                        <TableCell>{`${row?.user?.firstName} ${row?.user?.lastName}`}</TableCell>
                         <TableCell>{row?.transactionId && row?.transactionId}</TableCell>
                         <TableCell padding="checkbox" component="th" scope="row">
                           <Box

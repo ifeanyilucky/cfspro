@@ -44,6 +44,7 @@ import { AuthProvider } from './contexts/JWTContext';
 import App from './App';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
+import { WhatsappIcon } from './assets';
 
 // ----------------------------------------------------------------------
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -51,6 +52,7 @@ root.render(
   <HelmetProvider>
     <ReduxProvider store={store}>
       <PersistGate loading={<LoadingScreen />} persistor={persistor}>
+        <WhatsappIcon />
         <LocalizationProvider dateAdapter={AdapterDateFns}>
           <SettingsProvider>
             <CollapseDrawerProvider>
