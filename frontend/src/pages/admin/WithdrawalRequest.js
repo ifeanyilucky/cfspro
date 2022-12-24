@@ -22,7 +22,6 @@ import {
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { deleteProduct } from '../../redux/slices/product';
 // utils
 import { fDate, fToNow, fDateTime } from '../../utils/formatTime';
 import { fCurrency } from '../../utils/formatNumber';
@@ -41,16 +40,17 @@ import {
   ProductListToolbar,
   ProductMoreMenu
 } from '../../components/_dashboard/e-commerce/product-list';
-import { getStaticDeposits } from 'src/redux/slices/investment';
-import DepositDetail from 'src/components/_dashboard/admin/depost-detail';
+import { getStaticWithdrawals } from 'src/redux/slices/investment';
+import WithdrawalDetail from 'src/components/_dashboard/admin/withdrawal-detail';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
   { id: 'dateCreated', label: 'Date', alignRight: false },
-  { id: 'trxId', label: 'Transaction ID', alignRight: false },
+  { id: 'ID', label: 'ID', alignRight: false },
   { id: 'amount', label: 'Amount', alignRight: false },
-  { id: 'paymentMode', label: 'Payment mode', alignRight: false },
+  { id: 'user', label: 'User', alignRight: false },
+  { id: 'Method', label: 'Method', alignRight: false },
   { id: 'status', label: 'Status', alignRight: true },
   { id: 'action', label: 'Action', alignRight: true }
 ];
@@ -98,19 +98,11 @@ export default function WithdrawalRequest() {
   const [orderBy, setOrderBy] = useState('createdAt');
 
   useEffect(() => {
-    dispatch(getStaticDeposits());
+    dispatch(getStaticWithdrawals());
   }, [dispatch]);
   const { deposits, withdrawal } = useSelector((state) => state.investment);
-  console.log(deposits);
-  const transactions = [...deposits, ...withdrawal].map((deposit) => {
-    return {
-      _id: deposit._id,
-      method: deposit.method,
-      status: deposit.status,
-      createdAt: deposit.createdAt,
-      amount: deposit.amount
-    };
-  });
+  console.log(withdrawal);
+
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
@@ -119,7 +111,7 @@ export default function WithdrawalRequest() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = transactions.map((n) => n._id);
+      const newSelecteds = withdrawal.map((n) => n._id);
       setSelected(newSelecteds);
       return;
     }
@@ -134,48 +126,54 @@ export default function WithdrawalRequest() {
     setRowsPerPage(parseInt(e.target.value, 10));
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - transactions.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - withdrawal.length) : 0;
 
-  const filteredTransaction = applySortFilter(transactions, getComparator(order, orderBy), filterName);
+  const filteredWithdrawal = applySortFilter(withdrawal, getComparator(order, orderBy), filterName);
 
-  const isProductNotFound = filteredTransaction.length === 0;
-  const [depositOpen, setDepositOpen] = useState(false);
-  const [currentDeposit, setCurrentDeposit] = useState(null);
+  const isProductNotFound = filteredWithdrawal.length === 0;
+  const [withdrawalOpen, setWithdrawalOpen] = useState(false);
+  const [currentWithdrawal, setCurrentWithdrawal] = useState(null);
 
   const editUser = () => {};
   return (
-    <Page title="Account history">
+    <Page title="Withdrawal request">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading="Deposit Request"
+          heading="Withdrawal Request"
           links={[
             { name: 'Dashboard', href: PATH_ADMIN.overview },
             {
-              name: 'Deposit request'
+              name: 'Withdrawal request'
             }
           ]}
         />
-        <DepositDetail deposit={currentDeposit} setDepositOpen={setDepositOpen} depositOpen={depositOpen} />
         <Card>
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
+              <WithdrawalDetail
+                withdrawal={currentWithdrawal}
+                setWithdrawalOpen={setWithdrawalOpen}
+                withdrawalOpen={withdrawalOpen}
+              />
+
               <Table>
                 <ProductListHead
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={transactions.length}
+                  rowCount={withdrawal.length}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
-                  {filteredTransaction.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                  {filteredWithdrawal.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
                     return (
                       <TableRow hover key={row?._id} tabIndex={-1}>
                         <TableCell>{row?.createdAt && fDateTime(row?.createdAt)}</TableCell>
+
                         <TableCell>{row?.transactionId && row?.transactionId}</TableCell>
-                        <TableCell padding="checkbox" component="th" scope="row">
+                        <TableCell>
                           <Box
                             sx={{
                               py: 2,
@@ -187,6 +185,9 @@ export default function WithdrawalRequest() {
                               {row?.amount && fCurrency(row?.amount)}
                             </Typography>
                           </Box>
+                        </TableCell>
+                        <TableCell>
+                          {row?.user?.firstName} {row?.user?.lastName}
                         </TableCell>
                         <TableCell align="right">
                           <Box
@@ -201,7 +202,7 @@ export default function WithdrawalRequest() {
                             </Typography>
                           </Box>
                         </TableCell>
-                        <TableCell style={{ minWidth: 160 }}>
+                        <TableCell>
                           {row?.status && (
                             <Label
                               variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
@@ -215,12 +216,13 @@ export default function WithdrawalRequest() {
                             </Label>
                           )}
                         </TableCell>
+
                         <TableCell>
                           <Button
                             variant="contained"
                             onClick={() => {
-                              setCurrentDeposit(row);
-                              setDepositOpen(true);
+                              setCurrentWithdrawal(row);
+                              setWithdrawalOpen(true);
                             }}
                           >
                             View
@@ -253,7 +255,7 @@ export default function WithdrawalRequest() {
           <TablePagination
             rowsPerPageOptions={[]}
             component="div"
-            count={transactions.length}
+            count={withdrawal.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onRowsPerPageChange={handleChangeRowsPerPage}

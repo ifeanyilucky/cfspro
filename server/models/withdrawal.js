@@ -4,7 +4,7 @@ const withdrawal = new mongoose.Schema(
   {
     user: {
       type: mongoose.Types.ObjectId,
-      ref: 'User',
+      ref: 'user',
       required: [true, 'User not provided'],
     },
     amount: {
@@ -12,6 +12,9 @@ const withdrawal = new mongoose.Schema(
       required: true,
     },
     method: {
+      type: String,
+    },
+    walletAddress: {
       type: String,
     },
     status: {

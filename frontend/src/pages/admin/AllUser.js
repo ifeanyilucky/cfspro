@@ -42,7 +42,7 @@ import {
   ProductMoreMenu
 } from '../../components/_dashboard/e-commerce/product-list';
 import { getStaticDeposits } from 'src/redux/slices/investment';
-import DepositDetail from 'src/components/_dashboard/admin/depost-detail';
+import DepositDetail from 'src/components/_dashboard/admin/withdrawal-detail';
 import { getUserList } from 'src/redux/slices/user';
 
 // ----------------------------------------------------------------------

@@ -93,7 +93,7 @@ const requestWithdrawalOtp = async (req, res) => {
 
 // ACTUAL WITHDRAWALS
 const requestWithdrawal = async (req, res) => {
-  const { otp } = req.body;
+  const { amount } = req.body;
   console.log(req.body);
   const transactionId = shortId.generate();
 
@@ -102,6 +102,13 @@ const requestWithdrawal = async (req, res) => {
     user: req.user._id,
     transactionId: transactionId,
   });
+  await userSchema.findOneAndUpdate(
+    { _id: _withdraw.user },
+    {
+      $inc: { accountBalance: -amount },
+    },
+    { new: true }
+  );
   res.status(StatusCodes.CREATED).json({ withdrawal: _withdraw });
 };
 

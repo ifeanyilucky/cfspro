@@ -32,7 +32,7 @@ export const requestWithdrawal = (payload) => axiosInstance.post('/request-withd
 export const fetchTransaction = () => axiosInstance.get('/transaction');
 // ADMIN REQUESTS
 export const getStaticDeposits = () => axiosInstance.get('/static/deposits');
-export const getStaticWithrawal = () => axiosInstance.get('/static/withdrawals');
+export const getStaticWithdrawal = () => axiosInstance.get('/static/withdrawals');
 export const getStaticInvestments = () => axiosInstance.get('/static/investments');
 export const updateDeposit = (values, id) => axiosInstance.patch(`/static/update-deposit/${id}`, values);
 export const updateWithdrawal = (values, id) => axiosInstance.patch(`/static/update-withdrawal/${id}`, values);

@@ -218,12 +218,12 @@ export function getStaticDeposit(id) {
     }
   };
 }
-export const getStaticWithdrawals = (payload) => async (dispatch) => {
+export const getStaticWithdrawals = () => async (dispatch) => {
   dispatch(slice.actions.startLoading);
   try {
-    const { data } = await api.deposit(payload);
+    const { data } = await api.getStaticWithdrawal();
 
-    dispatch(slice.actions.addDeposit(data.deposits));
+    dispatch(slice.actions.getWithdrawalSuccess(data.withdrawals));
   } catch (error) {
     console.log(error);
   }

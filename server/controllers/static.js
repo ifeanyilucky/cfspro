@@ -60,9 +60,12 @@ const updateDeposit = async (req, res) => {
 
 // GET WITHDRAWAL
 const getWithdrawals = async (req, res) => {
-  const withdrawals = await withdraw.find().sort({
-    createdAt: -1,
-  });
+  const withdrawals = await withdraw
+    .find()
+    .sort({
+      createdAt: -1,
+    })
+    .populate('user');
   res.status(StatusCodes.OK).json({ withdrawals });
 };
 
@@ -75,12 +78,6 @@ const updateWithdrawal = async (req, res) => {
   const withdrawal = await withdraw.findOneAndUpdate(
     { _id: id },
     { ...req.body },
-    { new: true }
-  );
-
-  const user = await userSchema.findOneAndUpdate(
-    { _id: withdrawal.user },
-    { $inc: { accountBalance: -amount } },
     { new: true }
   );
 

@@ -33,15 +33,18 @@ export default function Withdraw() {
       .required()
       .min(100, 'Minimum amount to withdraw is $100')
       .max(user?.accountBalance, `Your account balance is ${fCurrency(user?.accountBalance)}`),
-    otp: Yup.string()
+    walletAddress: Yup.string().required()
   });
   const formik = useFormik({
     initialValues: {
-      amount: ''
+      amount: '',
+      walletAddress: '',
+      method: state?.method
     },
     validationSchema: ValidSchema,
-    onSubmit: (values, { setSubmitting }) => {
+    onSubmit: async (values, { setSubmitting }) => {
       dispatch(requestWithdrawal({ ...values }, setSubmitting, navigate));
+      window.location.replace(PATH_DASHBOARD.transaction);
     }
   });
   const { errors, getFieldProps, handleSubmit, values, touched } = formik;
@@ -113,6 +116,16 @@ export default function Withdraw() {
                     {...getFieldProps('amount')}
                     error={Boolean(touched.amount && errors.amount)}
                     helperText={touched.amount && errors.amount}
+                  />
+                </Stack>
+                <Stack>
+                  <TextField
+                    fullWidth
+                    type="text"
+                    label={`Enter ${state?.method} wallet address`}
+                    {...getFieldProps('walletAddress')}
+                    error={Boolean(touched.walletAddress && errors.walletAddress)}
+                    helperText={touched.walletAddress && errors.walletAddress}
                   />
                 </Stack>
                 {/* <Box>
