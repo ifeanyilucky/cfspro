@@ -3,7 +3,7 @@ import { Icon } from '@iconify/react';
 import editIcon from '@iconify/icons-eva/edit-2-fill';
 import { sentenceCase } from 'change-case';
 import { useState, useEffect } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // material
 import { useTheme } from '@mui/material/styles';
 import {
@@ -95,7 +95,8 @@ export default function UserList() {
   const [orderBy, setOrderBy] = useState('name');
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  console.log(userList);
+  const navigate = useNavigate();
+
   useEffect(() => {
     dispatch(getUserList());
   }, [dispatch]);
@@ -203,8 +204,7 @@ export default function UserList() {
                           <TableCell align="right">
                             <UserMoreMenu
                               handleEdit={() => {
-                                setUserOpen(true);
-                                setCurrentUser(row);
+                                navigate(`${PATH_ADMIN.allUser}/${row?._id}`);
                               }}
                               onDelete={() => handleDeleteUser(row?._id)}
                               userName={row?.firstName && row?.lastName}

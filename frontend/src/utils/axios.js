@@ -37,8 +37,9 @@ export const getStaticInvestments = () => axiosInstance.get('/static/investments
 export const updateDeposit = (values, id) => axiosInstance.patch(`/static/update-deposit/${id}`, values);
 export const updateWithdrawal = (values, id) => axiosInstance.patch(`/static/update-withdrawal/${id}`, values);
 export const getUserList = () => axiosInstance.get('/static/users');
+export const getUser = (id) => axiosInstance.get(`/static/users/${id}`);
 export const deleteUser = (id) => axiosInstance.delete(`/static/users/delete/${id}`);
-export const editUser = (payload, id) => axiosInstance.patch(`/users/edit/${id}`, { payload });
+export const editUser = (payload, id) => axiosInstance.patch(`/static/users/edit/${id}`, { ...payload });
 export const fetchInvestment = (id) => axiosInstance.get(`/static/investments/${id}`);
 export const fetchDeposit = (id) => axiosInstance.get(`/static/deposits/${id}`);
 // axiosInstance.interceptors.response.use(

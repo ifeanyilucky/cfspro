@@ -13,6 +13,7 @@ const initialState = {
   myProfile: null,
   posts: [],
   users: [],
+  user: null,
   userList: [],
   followers: [],
   friends: [],
@@ -54,6 +55,11 @@ const slice = createSlice({
     getUsersSuccess(state, action) {
       state.isLoading = false;
       state.users = action.payload;
+    },
+    // GET USERS
+    getUserSuccess(state, action) {
+      state.isLoading = false;
+      state.user = action.payload;
     },
 
     // UPDATE USERS
@@ -196,6 +202,17 @@ export function getUserList() {
   };
 }
 
+export function getSingleUser(id) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const { data } = await api.getUser(id);
+      dispatch(slice.actions.getUserSuccess(data.user));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+}
 // ----------------------------------------------------------------------
 
 export function getCards() {

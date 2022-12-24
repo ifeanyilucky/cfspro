@@ -92,16 +92,16 @@ const getUsers = async (req, res) => {
 
   res.status(StatusCodes.OK).json({ users });
 };
+
 const getUser = async (req, res) => {
   const { id } = req.params;
   const user = await userSchema.findOne({ _id: id });
-
   res.status(StatusCodes.OK).json({ user });
 };
-
 // UPDATE USER
 const updateUser = async (req, res) => {
   const { id } = req.params;
+  console.log(req.body);
   const user = await userSchema.findOneAndUpdate(
     { _id: id },
     { ...req.body },
