@@ -128,7 +128,7 @@ export default function UserList() {
 
   const filteredUsers = applySortFilter(userList, getComparator(order, orderBy), filterName);
 
-  const isUserNotFound = filteredUsers.length === 0;
+  const isUserNotFound = userList.length === 0;
   // user dialog
   const [currentUser, setCurrentUser] = useState(null);
   const [userOpen, setUserOpen] = useState(false);
@@ -160,7 +160,6 @@ export default function UserList() {
         />
         <EditUserDialog open={userOpen} setOpen={setUserOpen} user={currentUser} />
         <Card>
-          <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
               <Table>
@@ -172,7 +171,7 @@ export default function UserList() {
                   onRequestSort={handleRequestSort}
                 />
                 <TableBody>
-                  {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => {
+                  {userList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => {
                     if (row.role === 'customer') {
                       return (
                         <TableRow hover key={row?._id} tabIndex={-1}>

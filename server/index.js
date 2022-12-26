@@ -28,7 +28,13 @@ app.use(
   })
 );
 app.get('/welcome', function (req, res) {
-  res.render('welcome');
+  res.render('welcome', { fullName: 'Graham Gael' });
+});
+app.get('/send-email', function (req, res) {
+  res.render('customer-email', {
+    fullName: 'Graham Gael',
+    message: 'i just wanna greet you dear',
+  });
 });
 app.get('/forgot-password', function (req, res) {
   res.render('forgotPassword', {

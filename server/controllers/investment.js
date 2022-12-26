@@ -10,18 +10,16 @@ const sendEmail = require('../utils/sendEmail');
 const shortId = require('shortid');
 const ejs = require('ejs');
 const path = require('path');
+const moment = require('moment');
+const referralBonus = require('../models/referralBonus');
 
 // CREATE INVESTMENT CONTROLLER
 const createInvestment = async (req, res) => {
   const { amount } = req.body;
   const transactionId = shortId.generate();
-  Date.prototype.addDays = function (days) {
-    const date = new Date(this.valueOf());
-    date.setDate(date.getDate() + days);
-    return date;
-  };
+
   const date = new Date();
-  const expiryDate = date.addDays(90);
+  const expiryDate = moment(date, 'DD-MM-YYYY').add(90, 'days');
   const invest = await investSchema.create({
     ...req.body,
     user: req.user._id,
@@ -35,6 +33,20 @@ const createInvestment = async (req, res) => {
     { $inc: { accountBalance: -amount } },
     { new: true }
   );
+
+  const commissionForReferral = amount * 0.1;
+  if (user?.referrerId) {
+    const userBonus = await userSchema.findOneAndUpdate(
+      { referralId: user.referrerId },
+      { $inc: { referralBonus: commissionForReferral } }
+    );
+    await referralBonus.create({
+      amount: commissionForReferral,
+      bonusFrom: req.user._id,
+      user: userBonus._id,
+    });
+  }
+
   res.status(StatusCodes.CREATED).json({ investment: invest, user: user });
 };
 

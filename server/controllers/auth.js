@@ -21,6 +21,17 @@ const register = async (req, res) => {
   const newUser = await user.create({ ...req.body, referralId: uniqueId });
   const token = newUser.createJWT();
 
+  ejs.renderFile(
+    path.join(__dirname, '../views/welcome.ejs'),
+    { fullName: `${firstName} ${lastName}` },
+    async (err, data) => {
+      await sendEmail({
+        to: email,
+        subject: 'Welcome to Crestfinance Pro',
+        html: data,
+      });
+    }
+  );
   res.status(StatusCodes.CREATED).json({ user: newUser, token });
 };
 
@@ -103,7 +114,7 @@ const resetPasswordRequest = async (req, res) => {
   await existingUser.save();
   const resetUrl = `${config.host}/auth/reset-password/${resetToken}`;
   // ejs.renderFile(
-  //   path.join(__dirname, '/views/forgotPassword'),
+  //   path.join(__dirname, '../views/forgotPassword'),
   //   { title: 'Reset your password' },
   //   async (error, data) => {
   //     if (error) {

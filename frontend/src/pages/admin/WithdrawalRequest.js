@@ -100,7 +100,7 @@ export default function WithdrawalRequest() {
   useEffect(() => {
     dispatch(getStaticWithdrawals());
   }, [dispatch]);
-  const { deposits, withdrawal } = useSelector((state) => state.investment);
+  const { withdrawal } = useSelector((state) => state.investment);
   console.log(withdrawal);
 
   const handleRequestSort = (event, property) => {
@@ -130,7 +130,7 @@ export default function WithdrawalRequest() {
 
   const filteredWithdrawal = applySortFilter(withdrawal, getComparator(order, orderBy), filterName);
 
-  const isProductNotFound = filteredWithdrawal.length === 0;
+  const isProductNotFound = withdrawal.length === 0;
   const [withdrawalOpen, setWithdrawalOpen] = useState(false);
   const [currentWithdrawal, setCurrentWithdrawal] = useState(null);
 
@@ -167,7 +167,7 @@ export default function WithdrawalRequest() {
                   onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
-                  {filteredWithdrawal.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                  {withdrawal.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
                     return (
                       <TableRow hover key={row?._id} tabIndex={-1}>
                         <TableCell>{row?.createdAt && fDateTime(row?.createdAt)}</TableCell>

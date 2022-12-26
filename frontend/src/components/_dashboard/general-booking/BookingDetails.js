@@ -47,7 +47,7 @@ export default function BookingDetails({ users }) {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {users.map((row) => (
+                {users.slice(0, 5).map((row) => (
                   <TableRow key={row._id}>
                     <TableCell>
                       <Stack direction="row" alignItems="center" spacing={2}>

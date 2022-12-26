@@ -167,7 +167,7 @@ export default function MyPlan() {
                             </Label>
                           )}
                         </TableCell>
-                        <TableCell align="right">{row?.interest}</TableCell>
+                        <TableCell align="right">{row?.interest && fCurrency(row?.interest)}</TableCell>
                         <TableCell align="right">{fDateTime(row?.createdAt)}</TableCell>
                       </TableRow>
                     );

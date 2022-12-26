@@ -20,6 +20,12 @@ const investment = new mongoose.Schema(
       type: Object,
     },
 
+    investmentStatus: {
+      type: String,
+      enum: ['running', 'completed'],
+      default: 'running',
+    },
+
     transactionType: {
       type: String,
       enum: ['out', 'in'],

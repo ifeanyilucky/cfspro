@@ -76,7 +76,9 @@ export default function DepositRequestDetail() {
             sx={{ typography: 'body2', color: 'text.secondary' }}
           >
             <Typography variant="body2">Customer name</Typography> &mdash;
-            <Typography variant="body2">{deposit?.user?.firstName}</Typography>
+            <Typography variant="body2">
+              {deposit?.user?.firstName} {deposit?.user?.lastName}
+            </Typography>
           </Stack>
           <Stack
             component="li"
@@ -136,14 +138,20 @@ export default function DepositRequestDetail() {
           </Stack>
         </Stack>
         <Stack spacing={2} direction="row" sx={{ width: 1 }}>
-          <LoadingButton
-            loading={loading}
-            variant="contained"
-            color="success"
-            onClick={() => handleAction('completed')}
-          >
-            Approve
-          </LoadingButton>
+          {deposit?.status === 'completed' ? (
+            <Typography variant="subtitle1" sx={{ color: 'green' }}>
+              {deposit?.status}
+            </Typography>
+          ) : (
+            <LoadingButton
+              loading={loading}
+              variant="contained"
+              color="success"
+              onClick={() => handleAction('completed')}
+            >
+              Approve
+            </LoadingButton>
+          )}
           <LoadingButton loading={loading} variant="contained" color="error" onClick={() => handleAction('failed')}>
             Reject
           </LoadingButton>

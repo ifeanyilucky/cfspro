@@ -34,6 +34,7 @@ export const fetchTransaction = () => axiosInstance.get('/transaction');
 export const getStaticDeposits = () => axiosInstance.get('/static/deposits');
 export const getStaticWithdrawal = () => axiosInstance.get('/static/withdrawals');
 export const getStaticInvestments = () => axiosInstance.get('/static/investments');
+export const updateStaticInvestment = (id, values) => axiosInstance.patch(`/static/investments/edit/${id}`, values);
 export const updateDeposit = (values, id) => axiosInstance.patch(`/static/update-deposit/${id}`, values);
 export const updateWithdrawal = (values, id) => axiosInstance.patch(`/static/update-withdrawal/${id}`, values);
 export const getUserList = () => axiosInstance.get('/static/users');

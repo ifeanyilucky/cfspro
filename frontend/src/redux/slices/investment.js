@@ -82,8 +82,9 @@ export function createInvestment(values, setSubmitting, navigate) {
     try {
       const { data } = await api.newInvestment(values);
       dispatch(slice.actions.addInvestmentSuccess(data.investment));
-      navigate(PATH_DASHBOARD.transaction);
+
       setSubmitting(false);
+      window.location.replace(PATH_DASHBOARD.transaction);
     } catch (error) {
       console.log(error);
       setSubmitting(false);

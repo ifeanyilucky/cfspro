@@ -6,13 +6,17 @@ import plusFill from '@iconify/icons-eva/plus-fill';
 import { Link as RouterLink } from 'react-router-dom';
 // material
 import { useTheme, styled } from '@mui/material/styles';
+import editIcon from '@iconify/icons-eva/edit-2-fill';
+import saveIcon from '@iconify/icons-ant-design/save';
 import {
   Box,
   Card,
   Table,
+  Stack,
   Button,
   TableRow,
   Checkbox,
+  IconButton,
   TableBody,
   TableCell,
   Container,
@@ -25,7 +29,7 @@ import { useDispatch, useSelector } from '../../redux/store';
 import { deleteProduct } from '../../redux/slices/product';
 // utils
 import { fDate, fToNow, fDateTime } from '../../utils/formatTime';
-import { fCurrency } from '../../utils/formatNumber';
+import { fCurrency, fPercent } from '../../utils/formatNumber';
 // routes
 import { PATH_ADMIN, PATH_DASHBOARD } from '../../routes/paths';
 // hooks
@@ -43,14 +47,17 @@ import {
 } from '../../components/_dashboard/e-commerce/product-list';
 import { getStaticInvestments } from 'src/redux/slices/investment';
 import DepositDetail from 'src/components/_dashboard/admin/withdrawal-detail';
+import * as api from 'src/utils/axios';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
   { id: 'dateCreated', label: 'Date', alignRight: false },
-  { id: 'trxId', label: 'Transaction ID', alignRight: false },
+  { id: 'planName', label: 'Plan name', alignRight: false },
   { id: 'user', label: 'User', alignRight: false },
   { id: 'amount', label: 'Amount', alignRight: false },
+  { id: 'dailyInterest', label: 'Daily interest', alignRight: false },
+  { id: 'totalReturn', label: 'Total return', alignRight: false },
   { id: 'remainingDays', label: 'Days left', alignRight: false },
   { id: 'interest', label: 'Interest', alignRight: true },
   { id: 'action', label: 'Action', alignRight: true }
@@ -131,7 +138,7 @@ export default function Investment() {
 
   const filteredInvestments = applySortFilter(investments, getComparator(order, orderBy), filterName);
 
-  const isProductNotFound = filteredInvestments.length === 0;
+  const isProductNotFound = investments.length === 0;
 
   const getNumberOfDays = (start, end) => {
     const date1 = new Date(start);
@@ -143,6 +150,16 @@ export default function Investment() {
     return diffInDays;
   };
 
+  const [isEdit, setEdit] = useState(false);
+  const [interest, setInterest] = useState('');
+  const updateInvestment = async (id, values) => {
+    try {
+      await api.updateStaticInvestment(id, values);
+      window.location.reload();
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <Page title="Account history">
       <Container maxWidth={themeStretch ? false : 'lg'}>
@@ -169,14 +186,27 @@ export default function Investment() {
                   onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
-                  {filteredInvestments.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                  {investments.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
                     console.log(getNumberOfDays(row?.createdAt, row?.expiryDate));
                     return (
                       <TableRow hover key={row?._id} tabIndex={-1}>
                         <TableCell>{row?.createdAt && fDateTime(row?.createdAt)}</TableCell>
-                        <TableCell>{row?.transactionId && row?.transactionId}</TableCell>
+                        <TableCell>{row?.plan?.name && row?.plan?.name}</TableCell>
                         <TableCell>
                           {row?.user?.firstName} {row?.user?.lastName}
+                        </TableCell>
+                        <TableCell>
+                          <Box
+                            sx={{
+                              py: 2,
+                              display: 'flex',
+                              alignItems: 'center'
+                            }}
+                          >
+                            <Typography variant="subtitle2" noWrap>
+                              {row?.amount && fCurrency(row?.amount)}
+                            </Typography>
+                          </Box>
                         </TableCell>
                         <TableCell padding="checkbox" component="th" scope="row">
                           <Box
@@ -187,7 +217,20 @@ export default function Investment() {
                             }}
                           >
                             <Typography variant="subtitle2" noWrap>
-                              {row?.amount && fCurrency(row?.amount)}
+                              {row?.plan?.dailyInterest && fPercent(row?.plan?.dailyInterest)}
+                            </Typography>
+                          </Box>
+                        </TableCell>
+                        <TableCell padding="checkbox" component="th" scope="row">
+                          <Box
+                            sx={{
+                              py: 2,
+                              display: 'flex',
+                              alignItems: 'center'
+                            }}
+                          >
+                            <Typography variant="subtitle2" noWrap>
+                              {row?.plan?.totalReturn && fPercent(row?.plan?.totalReturn)}
                             </Typography>
                           </Box>
                         </TableCell>
@@ -204,8 +247,47 @@ export default function Investment() {
                             </Typography>
                           </Box>
                         </TableCell>
-                        <TableCell>{row?.interest}</TableCell>
-                        <TableCell>more action</TableCell>
+                        <TableCell>
+                          <Stack direction="row" alignItems="center" spacing={2}>
+                            {isEdit ? (
+                              <input
+                                type="number"
+                                defaultValue={row?.interest}
+                                onChange={(e) => {
+                                  setInterest(e.target.value);
+                                }}
+                              />
+                            ) : (
+                              fCurrency(row?.interest)
+                            )}
+                            <Button
+                              onClick={() => {
+                                if (isEdit === true) {
+                                  updateInvestment(row?._id, { interest });
+                                } else {
+                                  setEdit(true);
+                                }
+                              }}
+                            >
+                              {isEdit ? 'Save' : 'Edit'}
+                            </Button>
+                          </Stack>
+                        </TableCell>
+                        <TableCell>
+                          {row?.investmentStatus === 'completed' ? (
+                            <Typography variant="subtitle2" sx={{ color: 'green' }}>
+                              {row?.investmentStatus}
+                            </Typography>
+                          ) : (
+                            <Button
+                              variant="contained"
+                              color="primary"
+                              onClick={() => updateInvestment(row?._id, { investmentStatus: 'completed' })}
+                            >
+                              Complete investment
+                            </Button>
+                          )}
+                        </TableCell>
                       </TableRow>
                     );
                   })}

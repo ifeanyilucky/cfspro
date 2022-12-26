@@ -138,7 +138,7 @@ export default function DepositRequest() {
 
   const filteredTransaction = applySortFilter(transactions, getComparator(order, orderBy), filterName);
 
-  const isProductNotFound = filteredTransaction.length === 0;
+  const isProductNotFound = transactions.length === 0;
 
   return (
     <Page title="Account history">
@@ -167,11 +167,13 @@ export default function DepositRequest() {
                   onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
-                  {filteredTransaction.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                  {transactions.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
                     return (
                       <TableRow hover key={row?._id} tabIndex={-1}>
                         <TableCell>{row?.createdAt && fDateTime(row?.createdAt)}</TableCell>
-                        <TableCell>{`${row?.user?.firstName} ${row?.user?.lastName}`}</TableCell>
+                        <TableCell>
+                          {row?.user?.firstName && `${row?.user?.firstName} ${row?.user?.lastName}`}
+                        </TableCell>
                         <TableCell>{row?.transactionId && row?.transactionId}</TableCell>
                         <TableCell padding="checkbox" component="th" scope="row">
                           <Box

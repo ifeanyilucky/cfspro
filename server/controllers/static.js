@@ -14,11 +14,30 @@ const path = require('path');
 const getInvestments = async (req, res) => {
   const investments = await investSchema
     .find()
-
-    .sort({ createdAt: -1 })
+    .sort('-createdAt')
     .populate('user');
   res.status(StatusCodes.OK).json({ investments });
 };
+
+const updateInvestment = async (req, res) => {
+  const { id } = req.params;
+  const investment = await investSchema.findOneAndUpdate(
+    { _id: id },
+    { ...req.body },
+    { new: true }
+  );
+
+  if (req.body.investmentStatus === 'completed') {
+    await userSchema.findOneAndUpdate(
+      { _id: investment.user },
+      { $inc: { accountBalance: investment.interest } },
+      { new: true }
+    );
+  }
+
+  res.status(StatusCodes.ACCEPTED).json({ investment });
+};
+
 const getDeposits = async (req, res) => {
   const deposits = await depositSchema
     .find({ status: 'pending' })
@@ -85,7 +104,7 @@ const updateWithdrawal = async (req, res) => {
 };
 // GET USERS
 const getUsers = async (req, res) => {
-  const users = await userSchema.find({ role: 'customer' });
+  const users = await userSchema.find({ role: 'customer' }).sort('-createdAt');
 
   res.status(StatusCodes.OK).json({ users });
 };
@@ -116,15 +135,15 @@ const deleteUser = async (req, res) => {
 const sendEmailToCustomer = async (req, res) => {
   const { subject, email, message } = req.body;
   ejs.renderFile(
-    path.join(__dirname, '../views/customer-email'),
-    { config: '', title: subject },
-    async (err, data) => {
+    path.join(__dirname, '../views/customer-email.ejs'),
+    { fullName: `${email}`, message: message, subject: subject },
+    (err, data) => {
       if (err) {
         console.log(err);
       } else {
-        await sendEmail({
+        sendEmail({
           to: email,
-          subject: req.body.subject,
+          subject: subject,
           html: data,
         });
       }
@@ -154,6 +173,7 @@ module.exports = {
   sendEmailToCustomer,
   getReferralBonus,
   getInvestments,
+  updateInvestment,
   getDeposit,
   getUser,
 };

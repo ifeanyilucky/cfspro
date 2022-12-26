@@ -6,7 +6,7 @@ import { useSnackbar } from 'notistack';
 import { useFormik, FormikProvider, Form } from 'formik';
 import axios from '../../utils/axios';
 import Page from '../../components/Page';
-import { getUsers } from 'src/redux/slices/user';
+import { getUserList } from 'src/redux/slices/user';
 import { MIconButton } from 'src/components/@material-extend';
 import { Icon } from '@iconify/react';
 import closeFill from '@iconify/icons-eva/close-fill';
@@ -17,7 +17,7 @@ export default function SendEmail() {
   const dispatch = useDispatch();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   useEffect(() => {
-    dispatch(getUsers());
+    dispatch(getUserList());
   }, []);
   const { userList } = useSelector((state) => state.user);
 
@@ -33,7 +33,7 @@ export default function SendEmail() {
       await axios
         .post(`/static/send-email`, values)
         .then((res) => {
-          enqueueSnackbar('Login success', {
+          enqueueSnackbar('Email sent successfully!', {
             variant: 'success',
             action: (key) => (
               <MIconButton size="small" onClick={() => closeSnackbar(key)}>
