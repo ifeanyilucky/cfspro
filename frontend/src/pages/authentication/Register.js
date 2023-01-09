@@ -60,9 +60,9 @@ export default function Register() {
           <Box sx={{ mb: 5, display: 'flex', alignItems: 'center' }}>
             <Box sx={{ flexGrow: 1 }}>
               <Typography variant="h4" gutterBottom>
-                Create an account .
+                Create an account.
               </Typography>
-              <Typography sx={{ color: 'text.secondary' }}>Register an to get started.</Typography>
+              <Typography sx={{ color: 'text.secondary' }}>Register an account to get started.</Typography>
             </Box>
             <Tooltip title={capitalCase(method)}>
               <Box component="img" src={`/static/auth/ic_${method}.png`} sx={{ width: 32, height: 32 }} />

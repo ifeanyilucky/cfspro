@@ -22,7 +22,8 @@ export default function Referrals() {
   if (!userList.length) {
     return <h4>Loading...</h4>;
   }
-  const referredUsers = userList.filter((user) => user.referrerId === user?.referralId);
+  console.log(userList);
+  const referredUsers = userList.filter((u) => u.referrerId === user?.referralId);
 
   return (
     <Page title="Referral">
