@@ -11,6 +11,7 @@ import RoleBasedGuard from '../guards/RoleBasedGuard';
 // components
 import LoadingScreen from '../components/LoadingScreen';
 
+
 // ----------------------------------------------------------------------
 
 const Loadable = (Component) => (props) => {
@@ -135,7 +136,7 @@ export default function Router() {
 
     { path: '*', element: <Navigate to="/404" replace /> }
   ]);
-}
+};
 
 // IMPORT COMPONENTS
 const ReferralPage = Loadable(lazy(() => import('../pages/ReferralPage')));
